@@ -35,7 +35,7 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x6b19B1FC31f54cDc1c5d606795187c7d071c7369",
+      bondAddress: "0xfc45240401e30782c39045C3E8E8a2e90d86D31e",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
     },
     [NetworkID.Fantom]: {
@@ -67,8 +67,8 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0xA336b8f4ce531B6d17B9587b8876cABdb2FD968D",
-      reserveAddress: "0x63bC075b61C6d8659285d92571c490e364bd9d10",
+      bondAddress: "0x396ED200a4aaeaD34216cD548C4Cb8933a43c663",
+      reserveAddress: "0xd1613568349568267503664ed4502bE6aC509CFe",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",

@@ -33,7 +33,7 @@ function useBonds() {
     let bondDetails: IAllBondData[];
     bondDetails = allBonds
       .flatMap(bond => {
-        if (bondState[bond.name] && bondState[bond.name].bondDiscount) {
+        if (bondState[bond.name] && bondState[bond.name].bondDiscount !== undefined) {
           return Object.assign(bond, bondState[bond.name]); // Keeps the object type
         }
         return bond;
@@ -53,7 +53,6 @@ function useBonds() {
   }, [bondState, accountBondsState, bondLoading]);
 
   // Debug Log:
-  // console.log(bonds);
   return { bonds, loading: bondLoading };
 }
 
