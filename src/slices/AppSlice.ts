@@ -1,12 +1,15 @@
 import { BigNumber, ethers } from "ethers";
-import { addresses } from "../constants";
+import { addresses, API_URL } from "../constants";
 import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
 import { abi as sPIPv2 } from "../abi/sOhmv2.json";
 import { abi as Bego } from "../abi/Bego.json";
-import { setAll, getTokenPrice, getMarketPrice } from "../helpers";
+import { abi as ERC20 } from "../abi/IERC20.json";
+import { setAll, getMarketPrice } from "../helpers";
 import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "src/store";
 import { IBaseAsyncThunk } from "./interfaces";
+import { allBonds } from "src/helpers/AllBonds";
+import { getTokenPrice, getLPTokenPrice } from "src/helpers/GetPrice";
 
 const initialState = {
   loading: false,
@@ -35,9 +38,26 @@ export const loadAppDetails = createAsyncThunk(
     totalSupply = parseFloat(ethers.utils.formatUnits(totalSupply, decimals).toString());
     const marketCap = marketPrice * totalSupply;
     const circSupply = totalSupply - stakingTVL;
-    let treasuryBalance = await begoMainContract.balanceOf(addresses[networkID].TREASURY_ADDRESS as string);
-    treasuryBalance = ethers.utils.formatUnits(treasuryBalance, decimals);
-    const treasuryMarketValue = treasuryBalance * marketPrice;
+    let treasuryMarketValue = 0;
+    for (let i = 0; i < allBonds.length; i++) {
+      const tokenContract = new ethers.Contract(
+        allBonds[i]["networkAddrs"][networkID].reserveAddress as string,
+        ERC20,
+        provider,
+      );
+      console.log(tokenContract);
+      let treasuryBalance = await tokenContract.balanceOf(addresses[networkID].TREASURY_ADDRESS as string);
+      const daiDecimals = await tokenContract.decimals();
+      treasuryBalance = ethers.utils.formatUnits(treasuryBalance, daiDecimals);
+      let tokenPrice = 0;
+      if (allBonds[i].name.endsWith("lp")) {
+        tokenPrice = await getLPTokenPrice(networkID, provider, allBonds[i]["networkAddrs"][networkID].reserveAddress);
+      } else {
+        tokenPrice = await getTokenPrice(networkID, provider, allBonds[i]["networkAddrs"][networkID].reserveAddress);
+      }
+      treasuryMarketValue += treasuryBalance * tokenPrice;
+      console.log("ffff", treasuryMarketValue);
+    }
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
 
     if (!provider) {
@@ -72,6 +92,10 @@ export const loadAppDetails = createAsyncThunk(
     // Current index
     const currentIndex = await stakingContract.index();
 
+    // Dashboard data
+    const dashboardData = await dispatch(loadDashboardDetails()).unwrap();
+    console.log(dashboardData);
+
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
       currentBlock,
@@ -84,6 +108,7 @@ export const loadAppDetails = createAsyncThunk(
       circSupply,
       totalSupply,
       treasuryMarketValue,
+      dashboardData,
     } as IAppData;
   },
 );
@@ -138,7 +163,7 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
     marketPrice = await getMarketPrice({ networkID, provider });
     marketPrice = marketPrice / Math.pow(10, 9);
   } catch (e) {
-    marketPrice = await getTokenPrice("olympus");
+    marketPrice = await getTokenPrice(networkID, provider, addresses[networkID].OHM_ADDRESS);
   }
   return { marketPrice };
 });
@@ -156,7 +181,14 @@ interface IAppData {
   readonly totalSupply: number;
   readonly treasuryBalance?: number;
   readonly treasuryMarketValue?: number;
+  readonly dashboardData?: object;
 }
+
+export const loadDashboardDetails = createAsyncThunk("app/loadDashboardDetails", async () => {
+  const depositedResult = await fetch(API_URL);
+  const depositedData = await depositedResult.json();
+  return { totalDeposited: depositedData };
+});
 
 const appSlice = createSlice({
   name: "app",

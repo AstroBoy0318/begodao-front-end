@@ -16,9 +16,13 @@ import { useTheme } from "@material-ui/core/styles";
 import "./treasury-dashboard.scss";
 import apollo from "../../lib/apolloClient";
 import InfoTooltip from "src/components/InfoTooltip/InfoTooltip.jsx";
+import { startOfYesterday } from "date-fns/esm";
 
 function TreasuryDashboard() {
-  const [data, setData] = useState(null);
+  // const [data, setData] = useState(null);
+  const data = useSelector(state => {
+    return state.app.dashboardData;
+  });
   const [apy, setApy] = useState(null);
   const [runway, setRunway] = useState(null);
   const [staked, setStaked] = useState(null);
@@ -52,34 +56,29 @@ function TreasuryDashboard() {
   });
 
   useEffect(() => {
-    apollo(treasuryDataQuery).then(r => {
-      let metrics = r.data.protocolMetrics.map(entry =>
-        Object.entries(entry).reduce((obj, [key, value]) => ((obj[key] = parseFloat(value)), obj), {}),
-      );
-      metrics = metrics.filter(pm => pm.treasuryMarketValue > 0);
-      setData(metrics);
-
-      let staked = r.data.protocolMetrics.map(entry => ({
-        staked: (parseFloat(entry.sOhmCirculatingSupply) / parseFloat(entry.ohmCirculatingSupply)) * 100,
-        timestamp: entry.timestamp,
-      }));
-      staked = staked.filter(pm => pm.staked < 100);
-      setStaked(staked);
-
-      let runway = metrics.filter(pm => pm.runway10k > 5);
-      setRunway(runway);
-    });
-
-    apollo(rebasesDataQuery).then(r => {
-      let apy = r.data.rebases.map(entry => ({
-        apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
-        timestamp: entry.timestamp,
-      }));
-
-      apy = apy.filter(pm => pm.apy < 300000);
-
-      setApy(apy);
-    });
+    // apollo(treasuryDataQuery).then(r => {
+    //   let metrics = r.data.protocolMetrics.map(entry =>
+    //     Object.entries(entry).reduce((obj, [key, value]) => ((obj[key] = parseFloat(value)), obj), {}),
+    //   );
+    //   metrics = metrics.filter(pm => pm.treasuryMarketValue > 0);
+    //   setData(metrics);
+    //   let staked = r.data.protocolMetrics.map(entry => ({
+    //     staked: (parseFloat(entry.sOhmCirculatingSupply) / parseFloat(entry.ohmCirculatingSupply)) * 100,
+    //     timestamp: entry.timestamp,
+    //   }));
+    //   staked = staked.filter(pm => pm.staked < 100);
+    //   setStaked(staked);
+    //   let runway = metrics.filter(pm => pm.runway10k > 5);
+    //   setRunway(runway);
+    // });
+    // apollo(rebasesDataQuery).then(r => {
+    //   let apy = r.data.rebases.map(entry => ({
+    //     apy: Math.pow(parseFloat(entry.percentage) + 1, 365 * 3) * 100,
+    //     timestamp: entry.timestamp,
+    //   }));
+    //   apy = apy.filter(pm => pm.apy < 300000);
+    //   setApy(apy);
+    // });
   }, []);
 
   return (
@@ -171,23 +170,25 @@ function TreasuryDashboard() {
           <Grid container spacing={2} className="data-grid">
             <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card ohm-chart-card">
-                <Chart
-                  type="area"
-                  data={data}
-                  dataKey={["totalValueLocked"]}
-                  stopColor={[["#768299", "#98B3E9"]]}
-                  headerText="Total Value Deposited"
-                  headerSubText={`${data && formatCurrency(data[0].totalValueLocked)}`}
-                  bulletpointColors={bulletpoints.tvl}
-                  itemNames={tooltipItems.tvl}
-                  itemType={itemType.dollar}
-                  infoTooltipMessage={tooltipInfoMessages.tvl}
-                  expandedGraphStrokeColor={theme.palette.graphStrokeColor}
-                />
+                {data && (
+                  <Chart
+                    type="area"
+                    data={data && data.totalDeposited}
+                    dataKey={["amount"]}
+                    stopColor={[["#768299", "#98B3E9"]]}
+                    headerText="Total Value Deposited"
+                    headerSubText={`${data && data.totalDeposited && formatCurrency(data.totalDeposited[0].amount)}`}
+                    bulletpointColors={bulletpoints.tvl}
+                    itemNames={tooltipItems.tvl}
+                    itemType={itemType.dollar}
+                    infoTooltipMessage={tooltipInfoMessages.tvl}
+                    expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+                  />
+                )}
               </Paper>
             </Grid>
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card ohm-chart-card">
                 <Chart
                   type="stack"
@@ -257,7 +258,7 @@ function TreasuryDashboard() {
                   isPOL={true}
                 />
               </Paper>
-            </Grid>
+            </Grid> */}
             {/*  Temporarily removed until correct data is in the graph */}
             {/* <Grid item lg={6} md={12} sm={12} xs={12}>
               <Paper className="ohm-card">
@@ -277,7 +278,7 @@ function TreasuryDashboard() {
               </Paper>
             </Grid> */}
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card">
                 <Chart
                   type="area"
@@ -334,7 +335,7 @@ function TreasuryDashboard() {
                   expandedGraphStrokeColor={theme.palette.graphStrokeColor}
                 />
               </Paper>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Zoom>
       </Container>

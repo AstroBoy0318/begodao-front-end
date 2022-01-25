@@ -14,6 +14,8 @@ export const POOL_GRAPH_URLS = {
   1: "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
 };
 
+export const API_URL = "http://localhost:8080";
+
 interface IAddresses {
   [key: number]: { [key: string]: string };
 }
@@ -66,6 +68,8 @@ export const addresses: IAddresses = {
     DISTRIBUTOR_ADDRESS: "0x84046E578E6440582874fA6C852B27e2C78836d0",
     BONDINGCALC_ADDRESS: "0xa578055A71CfD49E6159384Dd0740b3CB9a607EE",
     TREASURY_ADDRESS: "0x25565F3102bDF574e11068680D4828D9696c19E8",
+    FACTORY_ADDRESS: "0xb2c9d73f632e6e99c3b21ac8e96a71c2d0d33039",
+    WFTM_ADDRESS: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
   },
   1: {
     DAI_ADDRESS: "0x6b175474e89094c44da98b954eedeac495271d0f", // duplicate

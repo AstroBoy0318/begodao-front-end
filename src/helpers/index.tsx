@@ -25,12 +25,6 @@ export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
   return marketPrice;
 }
 
-export async function getTokenPrice(tokenId = "olympus") {
-  // const resp = await axios.get(`https://api.coingecko.com/api/v3/simple/price?ids=${tokenId}&vs_currencies=usd`);
-  let tokenPrice: number = 5; //resp.data[tokenId].usd;
-  return tokenPrice;
-}
-
 export function shorten(str: string) {
   if (str.length < 10) return str;
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
