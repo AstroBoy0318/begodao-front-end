@@ -104,7 +104,7 @@ function TreasuryDashboard() {
 
               <Box className="metric price">
                 <Typography variant="h6" color="textSecondary">
-                  OHM Price
+                  BEGO Price
                 </Typography>
                 <Typography variant="h5">
                   {/* appleseed-fix */}
@@ -117,7 +117,7 @@ function TreasuryDashboard() {
                   wsPIP Price
                   <InfoTooltip
                     message={
-                      "wsPIP = sPIP * index\n\nThe price of wsPIP is equal to the price of OHM multiplied by the current index"
+                      "wsPIP = sPIP * index\n\nThe price of wsPIP is equal to the price of BEGO multiplied by the current index"
                     }
                   />
                 </Typography>
@@ -142,7 +142,7 @@ function TreasuryDashboard() {
 
               <Box className="metric bpo">
                 <Typography variant="h6" color="textSecondary">
-                  Backing per OHM
+                  Backing per BEGO
                 </Typography>
                 <Typography variant="h5">
                   {backingPerOhm ? formatCurrency(backingPerOhm, 2) : <Skeleton type="text" />}
@@ -154,7 +154,7 @@ function TreasuryDashboard() {
                   Current Index
                   <InfoTooltip
                     message={
-                      "The current index tracks the amount of sPIP accumulated since the beginning of staking. Basically, how much sPIP one would have if they staked and held a single OHM from day 1."
+                      "The current index tracks the amount of sPIP accumulated since the beginning of staking. Basically, how much sPIP one would have if they staked and held a single BEGO from day 1."
                     }
                   />
                 </Typography>

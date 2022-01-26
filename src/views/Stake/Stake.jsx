@@ -111,7 +111,7 @@ function Stake() {
     // 1st catch if quantity > balance
     let gweiValue = ethers.utils.parseUnits(quantity, "gwei");
     if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(pipBalance, "gwei"))) {
-      return dispatch(error("You cannot stake more than your OHM balance."));
+      return dispatch(error("You cannot stake more than your BEGO balance."));
     }
 
     if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sPIPBalance, "gwei"))) {
@@ -169,7 +169,7 @@ function Stake() {
                   <Link
                     className="migrate-sohm-button"
                     style={{ textDecoration: "none" }}
-                    href="https://docs.olympusdao.finance/using-the-website/migrate"
+                    href="https://docs.begoikodao.finance/using-the-website/migrate"
                     aria-label="migrate-sohm"
                     target="_blank"
                   >
@@ -224,7 +224,7 @@ function Stake() {
                         Current Index
                       </Typography>
                       <Typography variant="h4">
-                        {currentIndex ? <>{trim(currentIndex, 1)} OHM</> : <Skeleton width="150px" />}
+                        {currentIndex ? <>{trim(currentIndex, 1)} BEGO</> : <Skeleton width="150px" />}
                       </Typography>
                     </div>
                   </Grid>
@@ -238,7 +238,7 @@ function Stake() {
                   <div className="wallet-menu" id="wallet-menu">
                     {modalButton}
                   </div>
-                  <Typography variant="h6">Connect your wallet to stake OHM</Typography>
+                  <Typography variant="h6">Connect your wallet to stake BEGO</Typography>
                 </div>
               ) : (
                 <>
@@ -264,15 +264,15 @@ function Stake() {
                             <Typography variant="body1" className="stake-note" color="textSecondary">
                               {view === 0 ? (
                                 <>
-                                  First time staking <b>OHM</b>?
+                                  First time staking <b>BEGO</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>OHM</b> for staking.
+                                  Please approve Begoiko Dao to use your <b>BEGO</b> for staking.
                                 </>
                               ) : (
                                 <>
                                   First time unstaking <b>sPIP</b>?
                                   <br />
-                                  Please approve Olympus Dao to use your <b>sPIP</b> for unstaking.
+                                  Please approve Begoiko Dao to use your <b>sPIP</b> for unstaking.
                                 </>
                               )}
                             </Typography>
@@ -315,7 +315,7 @@ function Stake() {
                               onChangeStake("stake");
                             }}
                           >
-                            {txnButtonText(pendingTransactions, "staking", "Stake OHM")}
+                            {txnButtonText(pendingTransactions, "staking", "Stake BEGO")}
                           </Button>
                         ) : (
                           <Button
@@ -344,7 +344,7 @@ function Stake() {
                               onChangeStake("unstake");
                             }}
                           >
-                            {txnButtonText(pendingTransactions, "unstaking", "Unstake OHM")}
+                            {txnButtonText(pendingTransactions, "unstaking", "Unstake BEGO")}
                           </Button>
                         ) : (
                           <Button
@@ -367,7 +367,7 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="body1">Your Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(pipBalance, 4)} OHM</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trim(pipBalance, 4)} BEGO</>}
                       </Typography>
                     </div>
 
@@ -406,7 +406,7 @@ function Stake() {
         </Paper>
       </Zoom>
 
-      <ExternalStakePool />
+      {/*<ExternalStakePool />*/}
     </div>
   );
 }

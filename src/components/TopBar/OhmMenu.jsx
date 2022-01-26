@@ -5,9 +5,6 @@ import { useSelector } from "react-redux";
 import { Link, SvgIcon, Popper, Button, Paper, Typography, Divider, Box, Fade, Slide } from "@material-ui/core";
 import { ReactComponent as InfoIcon } from "../../assets/icons/info-fill.svg";
 import { ReactComponent as ArrowUpIcon } from "../../assets/icons/arrow-up.svg";
-import { ReactComponent as sOhmTokenImg } from "../../assets/tokens/token_sPIP.svg";
-import { ReactComponent as ohmTokenImg } from "../../assets/tokens/token_PIP.svg";
-import { ReactComponent as t33TokenImg } from "../../assets/tokens/token_33T.svg";
 
 import "./ohmmenu.scss";
 import { dai, ohm_dai } from "src/helpers/AllBonds";
@@ -26,7 +23,7 @@ const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
 
     // } ? PIPImg : SPIPImg;
     switch (tokenSymbol) {
-      case "OHM":
+      case "BEGO":
         tokenPath = PIPImg;
         break;
       case "33T":
@@ -84,7 +81,7 @@ function OhmMenu() {
     >
       <Button id="ohm-menu-button" size="large" variant="contained" color="secondary" title="OHM" aria-describedby={id}>
         <SvgIcon component={InfoIcon} color="primary" />
-        <Typography>OHM</Typography>
+        <Typography>BEGO</Typography>
       </Button>
 
       <Popper id={id} open={open} anchorEl={anchorEl} placement="bottom-start" transition>
@@ -111,20 +108,12 @@ function OhmMenu() {
                     <Divider color="secondary" />
                     <p>ADD TOKEN TO WALLET</p>
                     <Box display="flex" flexDirection="row" justifyContent="space-between">
-                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("OHM", BEGO_ADDRESS)}>
-                        <SvgIcon
-                          component={ohmTokenImg}
-                          viewBox="0 0 32 32"
-                          style={{ height: "25px", width: "25px" }}
-                        />
-                        <Typography variant="body1">OHM</Typography>
+                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("BEGO", BEGO_ADDRESS)}>
+                        <img src="favicon.png" width={25} alt="bego-icon" />
+                        <Typography variant="body1">BEGO</Typography>
                       </Button>
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("sPIP", SBEGO_ADDRESS)}>
-                        <SvgIcon
-                          component={sOhmTokenImg}
-                          viewBox="0 0 100 100"
-                          style={{ height: "25px", width: "25px" }}
-                        />
+                        <img src="favicon.png" width={25} alt="bego-icon" />
                         <Typography variant="body1">sPIP</Typography>
                       </Button>
                     </Box>

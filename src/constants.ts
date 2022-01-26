@@ -14,7 +14,7 @@ export const POOL_GRAPH_URLS = {
   1: "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
 };
 
-export const API_URL = "http://localhost:8080";
+export const API_URL = "https://daoback.begoiko.com";
 
 interface IAddresses {
   [key: number]: { [key: string]: string };

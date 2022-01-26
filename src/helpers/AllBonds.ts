@@ -50,8 +50,8 @@ export const dai = new StableBond({
 });
 
 export const ohm_dai = new LPBond({
-  name: "ohm_dai_lp",
-  displayName: "OHM-DAI LP",
+  name: "bego_dai_lp",
+  displayName: "BEGO-DAI LP",
   bondToken: "DAI",
   isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
   bondIconSvg: OhmDaiImg,

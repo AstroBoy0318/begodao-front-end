@@ -39,18 +39,14 @@ function NavContent() {
       <Box className="dapp-sidebar-inner" display="flex" justifyContent="space-between" flexDirection="column">
         <div className="dapp-menu-top">
           <Box className="branding-header">
-            <Link href="https://olympusdao.finance" target="_blank">
-              <SvgIcon
-                color="primary"
-                component={OlympusIcon}
-                viewBox="0 0 151 100"
-                style={{ minWdth: "151px", minHeight: "98px", width: "151px" }}
-              />
+            <Link href="https://app.begoiko.com" target="_blank">
+              <img src="favicon.png" alt="icon" width={64} />
+              <h2>Begoiko Dao</h2>
             </Link>
 
             {address && (
               <div className="wallet-link">
-                <Link href={`https://etherscan.io/address/${address}`} target="_blank">
+                <Link href={`https://ftmscan.com/address/${address}`} target="_blank">
                   {shorten(address)}
                 </Link>
               </div>
@@ -77,7 +73,7 @@ function NavContent() {
               <Link
                 component={NavLink}
                 id="stake-nav"
-                to="/"
+                to="/stake"
                 isActive={(match, location) => {
                   return checkPage(match, location, "stake");
                 }}
