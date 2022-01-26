@@ -39,6 +39,7 @@ export const loadAppDetails = createAsyncThunk(
     const marketCap = marketPrice * totalSupply;
     const circSupply = totalSupply - stakingTVL;
     let treasuryMarketValue = 0;
+    let currentTreasuryValue: ITreasuryValue = { timestamp: new Date().getTime() / 1000 };
     for (let i = 0; i < allBonds.length; i++) {
       const tokenContract = new ethers.Contract(
         allBonds[i]["networkAddrs"][networkID].reserveAddress as string,
@@ -56,8 +57,9 @@ export const loadAppDetails = createAsyncThunk(
         tokenPrice = await getTokenPrice(networkID, provider, allBonds[i]["networkAddrs"][networkID].reserveAddress);
       }
       treasuryMarketValue += treasuryBalance * tokenPrice;
-      console.log("ffff", treasuryMarketValue);
+      currentTreasuryValue[`value${i + 1}` as keyof ITreasuryValue] = treasuryBalance * tokenPrice;
     }
+    currentTreasuryValue.totalvalue = treasuryMarketValue;
     // const currentBlock = parseFloat(graphData.data._meta.block.number);
 
     if (!provider) {
@@ -93,8 +95,9 @@ export const loadAppDetails = createAsyncThunk(
     const currentIndex = await stakingContract.index();
 
     // Dashboard data
-    const dashboardData = await dispatch(loadDashboardDetails()).unwrap();
-    console.log(dashboardData);
+    let dashboardData = await dispatch(loadDashboardDetails()).unwrap();
+    dashboardData.totalDeposited.splice(0, 0, { amount: stakingTVL, timestamp: new Date().getTime() / 1000 });
+    dashboardData.treasuryValue.splice(0, 0, currentTreasuryValue);
 
     return {
       currentIndex: ethers.utils.formatUnits(currentIndex, "gwei"),
@@ -182,6 +185,20 @@ interface IAppData {
   readonly treasuryBalance?: number;
   readonly treasuryMarketValue?: number;
   readonly dashboardData?: object;
+}
+interface ITreasuryValue {
+  timestamp: number;
+  value1?: number;
+  value2?: number;
+  value3?: number;
+  value4?: number;
+  value5?: number;
+  value6?: number;
+  value7?: number;
+  value8?: number;
+  value9?: number;
+  value10?: number;
+  totalvalue?: number;
 }
 
 export const loadDashboardDetails = createAsyncThunk("app/loadDashboardDetails", async () => {
