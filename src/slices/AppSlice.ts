@@ -185,9 +185,11 @@ interface IAppData {
 }
 
 export const loadDashboardDetails = createAsyncThunk("app/loadDashboardDetails", async () => {
-  const depositedResult = await fetch(API_URL);
+  const depositedResult = await fetch(`${API_URL}/getTotalDeposited`);
   const depositedData = await depositedResult.json();
-  return { totalDeposited: depositedData };
+  const treasuryValueResult = await fetch(`${API_URL}/getTreasuryValue`);
+  const treasuryValueData = await treasuryValueResult.json();
+  return { totalDeposited: depositedData, treasuryValue: treasuryValueData };
 });
 
 const appSlice = createSlice({

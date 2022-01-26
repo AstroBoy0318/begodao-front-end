@@ -188,35 +188,32 @@ function TreasuryDashboard() {
               </Paper>
             </Grid>
 
-            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
+            <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card ohm-chart-card">
-                <Chart
-                  type="stack"
-                  data={data}
-                  dataKey={[
-                    "treasuryDaiMarketValue",
-                    "treasuryFraxMarketValue",
-                    "treasuryWETHMarketValue",
-                    "treasuryXsushiMarketValue",
-                  ]}
-                  stopColor={[
-                    ["#F5AC37", "#EA9276"],
-                    ["#768299", "#98B3E9"],
-                    ["#DC30EB", "#EA98F1"],
-                    ["#8BFF4D", "#4C8C2A"],
-                  ]}
-                  headerText="Market Value of Treasury Assets"
-                  headerSubText={`${data && formatCurrency(data[0].treasuryMarketValue)}`}
-                  bulletpointColors={bulletpoints.coin}
-                  itemNames={tooltipItems.coin}
-                  itemType={itemType.dollar}
-                  infoTooltipMessage={tooltipInfoMessages.mvt}
-                  expandedGraphStrokeColor={theme.palette.graphStrokeColor}
-                />
+                {data && (
+                  <Chart
+                    type="stack"
+                    data={data && data.treasuryValue}
+                    dataKey={["value1" /* , "value2", "value3", "value4" */]}
+                    stopColor={[
+                      ["#F5AC37", "#EA9276"],
+                      ["#768299", "#98B3E9"],
+                      ["#DC30EB", "#EA98F1"],
+                      ["#8BFF4D", "#4C8C2A"],
+                    ]}
+                    headerText="Market Value of Treasury Assets"
+                    headerSubText={`${data && formatCurrency(data.treasuryValue[0].totalvalue)}`}
+                    bulletpointColors={bulletpoints.coin}
+                    itemNames={tooltipItems.coin}
+                    itemType={itemType.dollar}
+                    infoTooltipMessage={tooltipInfoMessages.mvt}
+                    expandedGraphStrokeColor={theme.palette.graphStrokeColor}
+                  />
+                )}
               </Paper>
             </Grid>
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card ohm-chart-card">
                 <Chart
                   type="stack"
@@ -238,9 +235,9 @@ function TreasuryDashboard() {
                   expandedGraphStrokeColor={theme.palette.graphStrokeColor}
                 />
               </Paper>
-            </Grid>
+            </Grid> */}
 
-            <Grid item lg={6} md={6} sm={12} xs={12}>
+            {/* <Grid item lg={6} md={6} sm={12} xs={12}>
               <Paper className="ohm-card">
                 <Chart
                   type="area"
