@@ -30,7 +30,7 @@ export const loadAppDetails = createAsyncThunk(
       console.error("Returned a null response from dispatch(loadMarketPrice)");
       return;
     }
-    const begoMainContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, Bego, provider);
+    const begoMainContract = new ethers.Contract(addresses[networkID].BEGO_ADDRESS as string, Bego, provider);
     const stakingBalance = await begoMainContract.balanceOf(addresses[networkID].STAKING_ADDRESS as string);
     const decimals = await begoMainContract.decimals();
     const stakingTVL = parseFloat(ethers.utils.formatUnits(stakingBalance, decimals).toString()) * marketPrice;
@@ -81,7 +81,7 @@ export const loadAppDetails = createAsyncThunk(
       OlympusStakingv2,
       provider,
     );
-    const sohmMainContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, sPIPv2, provider);
+    const sohmMainContract = new ethers.Contract(addresses[networkID].SBEGO_ADDRESS as string, sPIPv2, provider);
 
     // Calculating staking
     const epoch = await stakingContract.epoch();
@@ -166,7 +166,7 @@ const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ network
     marketPrice = await getMarketPrice({ networkID, provider });
     marketPrice = marketPrice / Math.pow(10, 9);
   } catch (e) {
-    marketPrice = await getTokenPrice(networkID, provider, addresses[networkID].OHM_ADDRESS);
+    marketPrice = await getTokenPrice(networkID, provider, addresses[networkID].BEGO_ADDRESS);
   }
   return { marketPrice };
 });

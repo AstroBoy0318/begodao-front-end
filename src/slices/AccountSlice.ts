@@ -14,9 +14,9 @@ import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interf
 export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkID, provider }: IBaseAddressAsyncThunk) => {
-    const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider);
+    const ohmContract = new ethers.Contract(addresses[networkID].BEGO_ADDRESS as string, ierc20Abi, provider);
     const ohmBalance = await ohmContract.balanceOf(address);
-    const sohmContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, ierc20Abi, provider);
+    const sohmContract = new ethers.Contract(addresses[networkID].SBEGO_ADDRESS as string, ierc20Abi, provider);
     const sohmBalance = await sohmContract.balanceOf(address);
     let poolBalance = 0;
 
@@ -66,15 +66,15 @@ export const loadAccountDetails = createAsyncThunk(
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, ierc20Abi, provider);
     const daiBalance = await daiContract.balanceOf(address);
     console.log("account/daiBalance", String(daiBalance));
-    if (addresses[networkID].OHM_ADDRESS) {
-      const ohmContract = new ethers.Contract(addresses[networkID].OHM_ADDRESS as string, ierc20Abi, provider);
+    if (addresses[networkID].BEGO_ADDRESS) {
+      const ohmContract = new ethers.Contract(addresses[networkID].BEGO_ADDRESS as string, ierc20Abi, provider);
       ohmBalance = await ohmContract.balanceOf(address);
       stakeAllowance = await ohmContract.allowance(address, addresses[networkID].STAKING_HELPER_ADDRESS);
       console.log("account/stakeAllowance", String(stakeAllowance));
     }
 
-    if (addresses[networkID].SOHM_ADDRESS) {
-      const sohmContract = new ethers.Contract(addresses[networkID].SOHM_ADDRESS as string, sPIPv2, provider);
+    if (addresses[networkID].SBEGO_ADDRESS) {
+      const sohmContract = new ethers.Contract(addresses[networkID].SBEGO_ADDRESS as string, sPIPv2, provider);
       sohmBalance = await sohmContract.balanceOf(address);
       unstakeAllowance = await sohmContract.allowance(address, addresses[networkID].STAKING_ADDRESS);
       // poolAllowance = await sohmContract.allowance(address, addresses[networkID].PT_PRIZE_POOL_ADDRESS);
@@ -100,8 +100,8 @@ export const loadAccountDetails = createAsyncThunk(
     //   }
     // }
 
-    // if (addresses[networkID].WSOHM_ADDRESS) {
-    //   const wsohmContract = new ethers.Contract(addresses[networkID].WSOHM_ADDRESS as string, wsPIP, provider);
+    // if (addresses[networkID].WSBEGO_ADDRESS) {
+    //   const wsohmContract = new ethers.Contract(addresses[networkID].WSBEGO_ADDRESS as string, wsPIP, provider);
     //   const balance = await wsohmContract.balanceOf(address);
     //   wsohmBalance = await wsohmContract.wOHMTosPIP(balance);
     // }
