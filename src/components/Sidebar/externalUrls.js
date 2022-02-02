@@ -6,11 +6,6 @@ import { SvgIcon } from "@material-ui/core";
 
 const externalUrls = [
   {
-    title: "Forum",
-    url: "https://forum.begoikodao.com/",
-    icon: <SvgIcon color="primary" component={ForumIcon} />,
-  },
-  {
     title: "Governance",
     url: "https://vote.begoikodao.com/",
     icon: <SvgIcon color="primary" component={GovIcon} />,
@@ -19,11 +14,6 @@ const externalUrls = [
     title: "Docs",
     url: "https://docs.begoikodao.com/",
     icon: <SvgIcon color="primary" component={DocsIcon} />,
-  },
-  {
-    title: "Feedback",
-    url: "https://begoikodao.canny.io/",
-    icon: <SvgIcon color="primary" component={FeedbackIcon} />,
   },
 ];
 

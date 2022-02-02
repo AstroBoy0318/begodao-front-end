@@ -79,7 +79,7 @@ function OhmMenu() {
       onMouseLeave={e => handleClick(e)}
       id="ohm-menu-button-hover"
     >
-      <Button id="ohm-menu-button" size="large" variant="contained" color="secondary" title="OHM" aria-describedby={id}>
+      <Button id="ohm-menu-button" size="large" variant="contained" color="secondary" aria-describedby={id}>
         <SvgIcon component={InfoIcon} color="primary" />
         <Typography>BEGO</Typography>
       </Button>
@@ -91,13 +91,13 @@ function OhmMenu() {
               <Paper className="ohm-menu" elevation={1}>
                 <Box component="div" className="buy-tokens">
                   <Link
-                    href={`https://app.sushi.com/swap?inputCurrency=${daiAddress}&outputCurrency=${BEGO_ADDRESS}`}
+                    href={`https://spookyswap.finance/swap?inputCurrency=${daiAddress}&outputCurrency=${BEGO_ADDRESS}`}
                     target="_blank"
                     rel="noreferrer"
                   >
                     <Button size="large" variant="contained" color="secondary" fullWidth>
                       <Typography align="left">
-                        Buy on Sushiswap <SvgIcon component={ArrowUpIcon} htmlColor="#A3A3A3" />
+                        Buy on Spooky Swap <SvgIcon component={ArrowUpIcon} htmlColor="#A3A3A3" />
                       </Typography>
                     </Button>
                   </Link>
@@ -109,12 +109,12 @@ function OhmMenu() {
                     <p>ADD TOKEN TO WALLET</p>
                     <Box display="flex" flexDirection="row" justifyContent="space-between">
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("BEGO", BEGO_ADDRESS)}>
-                        <img src="favicon.png" width={25} alt="bego-icon" />
+                        <img src="bego.png" width={25} alt="bego-icon" />
                         <Typography variant="body1">BEGO</Typography>
                       </Button>
-                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("sPIP", SBEGO_ADDRESS)}>
-                        <img src="favicon.png" width={25} alt="bego-icon" />
-                        <Typography variant="body1">sPIP</Typography>
+                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("sBEGO", SBEGO_ADDRESS)}>
+                        <img src="sbego.png" width={25} alt="bego-icon" />
+                        <Typography variant="body1">sBEGO</Typography>
                       </Button>
                     </Box>
                   </Box>

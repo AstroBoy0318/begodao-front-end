@@ -36,7 +36,7 @@ function a11yProps(index) {
   };
 }
 
-const sOhmImg = getTokenImage("sohm");
+const sOhmImg = getTokenImage("sbego");
 const ohmImg = getOhmTokenImage(16, 16);
 
 function Stake() {
@@ -115,7 +115,7 @@ function Stake() {
     }
 
     if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sPIPBalance, "gwei"))) {
-      return dispatch(error("You cannot unstake more than your sPIP balance."));
+      return dispatch(error("You cannot unstake more than your sBEGO balance."));
     }
 
     await dispatch(changeStake({ address, action, value: quantity.toString(), provider, networkID: chainID }));
@@ -123,8 +123,8 @@ function Stake() {
 
   const hasAllowance = useCallback(
     token => {
-      if (token === "ohm") return stakeAllowance > 0;
-      if (token === "sPIP") return unstakeAllowance > 0;
+      if (token === "bego") return stakeAllowance > 0;
+      if (token === "sBEGO") return unstakeAllowance > 0;
       return 0;
     },
     [stakeAllowance, unstakeAllowance],
@@ -259,7 +259,7 @@ function Stake() {
 
                     <Box className="stake-action-row " display="flex" alignItems="center">
                       {address && !isAllowanceDataLoading ? (
-                        (!hasAllowance("ohm") && view === 0) || (!hasAllowance("sPIP") && view === 1) ? (
+                        (!hasAllowance("bego") && view === 0) || (!hasAllowance("sBEGO") && view === 1) ? (
                           <Box className="help-text">
                             <Typography variant="body1" className="stake-note" color="textSecondary">
                               {view === 0 ? (
@@ -270,9 +270,9 @@ function Stake() {
                                 </>
                               ) : (
                                 <>
-                                  First time unstaking <b>sPIP</b>?
+                                  First time unstaking <b>sBEGO</b>?
                                   <br />
-                                  Please approve Begoiko Dao to use your <b>sPIP</b> for unstaking.
+                                  Please approve Begoiko Dao to use your <b>sBEGO</b> for unstaking.
                                 </>
                               )}
                             </Typography>
@@ -305,7 +305,7 @@ function Stake() {
                       <TabPanel value={view} index={0} className="stake-tab-panel">
                         {isAllowanceDataLoading ? (
                           <Skeleton />
-                        ) : address && hasAllowance("ohm") ? (
+                        ) : address && hasAllowance("bego") ? (
                           <Button
                             className="stake-button"
                             variant="contained"
@@ -324,7 +324,7 @@ function Stake() {
                             color="primary"
                             disabled={isPendingTxn(pendingTransactions, "approve_staking")}
                             onClick={() => {
-                              onSeekApproval("ohm");
+                              onSeekApproval("bego");
                             }}
                           >
                             {txnButtonText(pendingTransactions, "approve_staking", "Approve")}
@@ -334,7 +334,7 @@ function Stake() {
                       <TabPanel value={view} index={1} className="stake-tab-panel">
                         {isAllowanceDataLoading ? (
                           <Skeleton />
-                        ) : address && hasAllowance("sPIP") ? (
+                        ) : address && hasAllowance("sBEGO") ? (
                           <Button
                             className="stake-button"
                             variant="contained"
@@ -353,7 +353,7 @@ function Stake() {
                             color="primary"
                             disabled={isPendingTxn(pendingTransactions, "approve_unstaking")}
                             onClick={() => {
-                              onSeekApproval("sPIP");
+                              onSeekApproval("sBEGO");
                             }}
                           >
                             {txnButtonText(pendingTransactions, "approve_unstaking", "Approve")}
@@ -374,14 +374,14 @@ function Stake() {
                     <div className="data-row">
                       <Typography variant="body1">Your Staked Balance</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedBalance} sPIP</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{trimmedBalance} sBEGO</>}
                       </Typography>
                     </div>
 
                     <div className="data-row">
                       <Typography variant="body1">Next Reward Amount</Typography>
                       <Typography variant="body1">
-                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue} sPIP</>}
+                        {isAppLoading ? <Skeleton width="80px" /> : <>{nextRewardValue} sBEGO</>}
                       </Typography>
                     </div>
 

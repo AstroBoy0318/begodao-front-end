@@ -110,8 +110,8 @@ export function getOhmTokenImage(w?: number, h?: number) {
 }
 
 export function getTokenImage(name: string) {
-  if (name === "ohm") return getOhmTokenImage();
-  if (name === "sohm") return getSohmTokenImage();
+  if (name === "bego") return getOhmTokenImage();
+  if (name === "sbego") return getSohmTokenImage();
 }
 
 // TS-REFACTOR-NOTE - Used for:

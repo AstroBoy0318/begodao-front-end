@@ -35,7 +35,7 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0xfc45240401e30782c39045C3E8E8a2e90d86D31e",
+      bondAddress: "0x9D39A4b06ddF7BEc59B0d743B24eDbD5474257F7",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
     },
     [NetworkID.Fantom]: {
@@ -67,8 +67,8 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x396ED200a4aaeaD34216cD548C4Cb8933a43c663",
-      reserveAddress: "0xd1613568349568267503664ed4502bE6aC509CFe",
+      bondAddress: "0xc63298e498238350dAE386731CfCbc84702c89e0",
+      reserveAddress: "0x4a181aE85169542b5fb7245381bdbf1243ad6265",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
@@ -83,11 +83,42 @@ export const ohm_dai = new LPBond({
     "https://app.sushi.com/add/0x383518188c0c6d7730d91b2c03a03c837814a899/0x6b175474e89094c44da98b954eedeac495271d0f",
 });
 
+export const wftm = new StableBond({
+  name: "wftm",
+  displayName: "WFTM",
+  bondToken: "WFTM",
+  isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
+  bondIconSvg: DaiImg,
+  bondContractABI: BondOhmDaiContract,
+  networkAddrs: {
+    [NetworkID.Mainnet]: {
+      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
+      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
+    },
+    [NetworkID.Testnet]: {
+      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
+      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
+    },
+    [NetworkID.FantomTestnet]: {
+      bondAddress: "0xc46b2615F5Dc4770a028549d2FDB4a4150690c00",
+      reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
+    },
+    [NetworkID.Fantom]: {
+      bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
+      reserveAddress: "0xF284057240eB07117133130e6f8801cCd5Cb95C4",
+    },
+    [NetworkID.Local]: {
+      bondAddress: "0x11aaAb8AfdbAE798a8e76E3bD006e3b2aea1aEBe",
+      reserveAddress: "0xf2F47d88A26592E8ccdB2144D34bA9CBf98Be0aD",
+    },
+  },
+});
+
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
 // Add new bonds to this array!!
-export const allBonds = [dai, ohm_dai]; //, eth, ohm_dai, ohm_frax, lusd, ohm_lusd, ohm_weth
+export const allBonds = [dai, ohm_dai, wftm]; //, eth, ohm_dai, ohm_frax, lusd, ohm_lusd, ohm_weth
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
 }, {});

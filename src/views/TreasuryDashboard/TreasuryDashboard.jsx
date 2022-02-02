@@ -114,10 +114,10 @@ function TreasuryDashboard() {
 
               <Box className="metric wsoprice">
                 <Typography variant="h6" color="textSecondary">
-                  wsPIP Price
+                  sBEGO Price
                   <InfoTooltip
                     message={
-                      "wsPIP = sPIP * index\n\nThe price of wsPIP is equal to the price of BEGO multiplied by the current index"
+                      "sBEGO * index\n\nThe price of sBEGO is equal to the price of BEGO multiplied by the current index"
                     }
                   />
                 </Typography>
@@ -154,12 +154,12 @@ function TreasuryDashboard() {
                   Current Index
                   <InfoTooltip
                     message={
-                      "The current index tracks the amount of sPIP accumulated since the beginning of staking. Basically, how much sPIP one would have if they staked and held a single BEGO from day 1."
+                      "The current index tracks the amount of sBEGO accumulated since the beginning of staking. Basically, how much sBEGO one would have if they staked and held a single BEGO from day 1."
                     }
                   />
                 </Typography>
                 <Typography variant="h5">
-                  {currentIndex ? trim(currentIndex, 2) + " sPIP" : <Skeleton type="text" />}
+                  {currentIndex ? trim(currentIndex, 2) + " sBEGO" : <Skeleton type="text" />}
                 </Typography>
               </Box>
             </Box>
@@ -244,7 +244,7 @@ function TreasuryDashboard() {
                   data={data}
                   dataKey={["treasuryOhmDaiPOL"]}
                   stopColor={[["rgba(128, 204, 131, 1)", "rgba(128, 204, 131, 0)"]]}
-                  headerText="Protocol Owned Liquidity OHM-DAI"
+                  headerText="Protocol Owned Liquidity BEGO-DAI"
                   headerSubText={`${data && trim(data[0].treasuryOhmDaiPOL, 2)}% `}
                   dataFormat="percent"
                   bulletpointColors={bulletpoints.pol}
@@ -282,7 +282,7 @@ function TreasuryDashboard() {
                   data={staked}
                   dataKey={["staked"]}
                   stopColor={[["#55EBC7", "#47ACEB"]]}
-                  headerText="OHM Staked"
+                  headerText="BEGO Staked"
                   dataFormat="percent"
                   headerSubText={`${staked && trim(staked[0].staked, 2)}% `}
                   isStaked={true}

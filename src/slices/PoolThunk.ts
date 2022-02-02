@@ -83,7 +83,7 @@ export const changeApproval = createAsyncThunk(
     }
 
     try {
-      if (token === "sPIP") {
+      if (token === "sBEGO") {
         approveTx = await sohmContract.approve(
           addresses[networkID].PT_PRIZE_POOL_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString(),

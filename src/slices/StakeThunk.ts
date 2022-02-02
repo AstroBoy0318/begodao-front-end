@@ -24,9 +24,9 @@ function alreadyApprovedToken(token: string, stakeAllowance: BigNumber, unstakeA
   let applicableAllowance = bigZero;
 
   // determine which allowance to check
-  if (token === "ohm") {
+  if (token === "bego") {
     applicableAllowance = stakeAllowance;
-  } else if (token === "sPIP") {
+  } else if (token === "sBEGO") {
     applicableAllowance = unstakeAllowance;
   }
 
@@ -65,21 +65,21 @@ export const changeApproval = createAsyncThunk(
     }
 
     try {
-      if (token === "ohm") {
+      if (token === "bego") {
         // won't run if stakeAllowance > 0
         approveTx = await ohmContract.approve(
           addresses[networkID].STAKING_HELPER_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString(),
         );
-      } else if (token === "sPIP") {
+      } else if (token === "sBEGO") {
         approveTx = await sohmContract.approve(
           addresses[networkID].STAKING_ADDRESS,
           ethers.utils.parseUnits("1000000000", "gwei").toString(),
         );
       }
 
-      const text = "Approve " + (token === "ohm" ? "Staking" : "Unstaking");
-      const pendingTxnType = token === "ohm" ? "approve_staking" : "approve_unstaking";
+      const text = "Approve " + (token === "bego" ? "Staking" : "Unstaking");
+      const pendingTxnType = token === "bego" ? "approve_staking" : "approve_unstaking";
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();

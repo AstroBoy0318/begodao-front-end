@@ -5,8 +5,8 @@ import externalUrls from "./externalUrls";
 import { ReactComponent as StakeIcon } from "../../assets/icons/stake.svg";
 import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
-import { ReactComponent as OlympusIcon } from "../../assets/icons/olympus-nav-header.svg";
-import { ReactComponent as PoolTogetherIcon } from "../../assets/icons/33-together.svg";
+import { ReactComponent as PresaleIcon } from "../../assets/icons/presale.svg";
+import { ReactComponent as RoadMapIcon } from "../../assets/icons/road-map.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
@@ -26,6 +26,12 @@ function NavContent() {
       return true;
     }
     if (currentPath.indexOf("stake") >= 0 && page === "stake") {
+      return true;
+    }
+    if (currentPath.indexOf("roadmap") >= 0 && page === "roadmap") {
+      return true;
+    }
+    if (currentPath.indexOf("presale") >= 0 && page === "presale") {
       return true;
     }
     if ((currentPath.indexOf("bonds") >= 0 || currentPath.indexOf("choose_bond") >= 0) && page === "bonds") {
@@ -55,6 +61,36 @@ function NavContent() {
 
           <div className="dapp-menu-links">
             <div className="dapp-nav" id="navbarNav">
+              <Link
+                component={NavLink}
+                id="presale-nav"
+                to="/presale"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "presale");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={PresaleIcon} viewBox="0 0 28 28" />
+                  Presale
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
+                id="roadmap-nav"
+                to="/roadmap"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "roadmap");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={RoadMapIcon} viewBox="0 0 122.88 120.98" />
+                  RoadMap
+                </Typography>
+              </Link>
+
               <Link
                 component={NavLink}
                 id="dash-nav"
