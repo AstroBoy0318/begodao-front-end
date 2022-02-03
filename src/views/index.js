@@ -6,3 +6,4 @@ export { default as PoolTogether } from "./33Together/33Together.jsx";
 export { default as TreasuryDashboard } from "./TreasuryDashboard/TreasuryDashboard";
 export { default as RoadMap } from "./RoadMap/RoadMap";
 export { default as Presale } from "./Presale/Presale";
+export { default as Nft } from "./NFT/nft";

@@ -6,7 +6,16 @@ import "./road-map.scss";
 function RoadMap() {
   const events = [
     {
-      title: "Launch Website",
+      title: "Open Website",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "KYC",
       description: [""],
       icon: (
         <Avatar>
@@ -25,7 +34,7 @@ function RoadMap() {
       ),
     },
     {
-      title: "Finalize Presale",
+      title: "Presale Finished",
       description: [""],
       icon: (
         <Avatar>
@@ -34,7 +43,7 @@ function RoadMap() {
       ),
     },
     {
-      title: "Open Swap pBego for BEGO",
+      title: "Add Liquidity",
       description: [""],
       icon: (
         <Avatar>
@@ -43,7 +52,52 @@ function RoadMap() {
       ),
     },
     {
-      title: "Start staking and bonds",
+      title: "Claim BEGO",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "Start Staking & Bonds",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "Open DAO",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "Launch Market NFTS",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "Launch Expansive Farms",
+      description: [""],
+      icon: (
+        <Avatar>
+          <Icon></Icon>
+        </Avatar>
+      ),
+    },
+    {
+      title: "Launch Farms NFTS",
       description: [""],
       icon: (
         <Avatar>

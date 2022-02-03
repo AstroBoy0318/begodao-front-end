@@ -5,3 +5,12 @@
 #presale-card .data-row {
   justify-content: space-around;
 }
+#presale-card .purchase-card {
+  text-align: center;
+}
+#presale-card .purchase-input-area {
+  display: flex;
+  grid-gap: 10px;
+  align-items: center;
+  margin-bottom: 10px;
+}

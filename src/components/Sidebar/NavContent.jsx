@@ -7,6 +7,7 @@ import { ReactComponent as BondIcon } from "../../assets/icons/bond.svg";
 import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.svg";
 import { ReactComponent as PresaleIcon } from "../../assets/icons/presale.svg";
 import { ReactComponent as RoadMapIcon } from "../../assets/icons/road-map.svg";
+import { ReactComponent as NFTIcon } from "../../assets/icons/nft-icon.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
@@ -34,6 +35,9 @@ function NavContent() {
     if (currentPath.indexOf("presale") >= 0 && page === "presale") {
       return true;
     }
+    if (currentPath.indexOf("nft") >= 0 && page === "nft") {
+      return true;
+    }
     if ((currentPath.indexOf("bonds") >= 0 || currentPath.indexOf("choose_bond") >= 0) && page === "bonds") {
       return true;
     }
@@ -45,7 +49,7 @@ function NavContent() {
       <Box className="dapp-sidebar-inner" display="flex" justifyContent="space-between" flexDirection="column">
         <div className="dapp-menu-top">
           <Box className="branding-header">
-            <Link href="https://app.begoiko.com" target="_blank">
+            <Link href="https://app.begodao.com" target="_blank">
               <img src="favicon.png" alt="icon" width={64} />
               <h2>Begoiko Dao</h2>
             </Link>
@@ -118,6 +122,21 @@ function NavContent() {
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={StakeIcon} />
                   Stake
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
+                id="nft-nav"
+                to="/nft"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "nft");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={NFTIcon} viewBox="0 0 29 28" />
+                  NFT
                 </Typography>
               </Link>
 
