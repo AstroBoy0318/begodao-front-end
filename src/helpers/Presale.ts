@@ -8,21 +8,8 @@ import { addresses } from "../constants";
 export async function isPresaleOpen(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
-    const isOpened = await presaleContract.openIdo();
-    const level = await presaleContract.whiteListed(address);
-    const startTime = await presaleContract.saleStartTime();
-    const privateSalePeriod = await presaleContract.saleStartTime();
-    const nowTime = new Date().getTime() / 1000;
-    if (level === 0) {
-      const publicSalePeriod = await presaleContract.saleStartTime();
-      return (
-        isOpened &&
-        startTime + privateSalePeriod < nowTime &&
-        startTime + privateSalePeriod + publicSalePeriod > nowTime
-      );
-    } else {
-      return isOpened && startTime + privateSalePeriod > nowTime;
-    }
+    const isOpened = await presaleContract.isOpenForUser(address);
+    return isOpened;
   } catch (ex) {
     return false;
   }
@@ -31,26 +18,18 @@ export async function isPresaleOpen(networkID: NetworkID, provider: StaticJsonRp
 export async function getPurchased(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
-    const purchased = await presaleContract.boughtTokens(address);
-    return purchased;
+    const purchased = await presaleContract.purchasedAmount(address);
+    return Number(ethers.utils.formatUnits(purchased, 9));
   } catch (ex) {
-    return true;
+    return 0;
   }
 }
 
 export async function getMaxAmount(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
-    const level = await presaleContract.whiteListed(address);
-    let maxPurchaseAmount = await presaleContract.maxPurchaseAmount(level);
-    maxPurchaseAmount = ethers.utils.formatUnits(maxPurchaseAmount, 9);
-    maxPurchaseAmount = Number(maxPurchaseAmount);
-    let sellAmount = await presaleContract.sellAmount();
-    sellAmount = ethers.utils.formatUnits(sellAmount, 9);
-    let totalAmount = await presaleContract.totalAmount();
-    totalAmount = ethers.utils.formatUnits(totalAmount, 9);
-    const remainAmount = Number(totalAmount) - Number(sellAmount);
-    return remainAmount < maxPurchaseAmount ? remainAmount : maxPurchaseAmount;
+    const maxAmount = await presaleContract.getMaxPurchaseAmount(address);
+    return Number(ethers.utils.formatUnits(maxAmount, 9));
   } catch (ex) {
     return 0;
   }
@@ -61,7 +40,7 @@ export async function getPrice(networkID: NetworkID, provider: StaticJsonRpcProv
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
     const level = await presaleContract.whiteListed(address);
     const price = await presaleContract.salePrice(level);
-    return ethers.utils.formatEther(price);
+    return Number(ethers.utils.formatEther(price));
   } catch (ex) {
     return 0;
   }
@@ -71,7 +50,7 @@ export async function getDaiApproval(networkID: NetworkID, provider: StaticJsonR
   try {
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, dai_abi, provider);
     const approval = await daiContract.allowance(address, addresses[networkID].PRESALE_ADDRESS);
-    return ethers.utils.formatEther(approval);
+    return Number(ethers.utils.formatEther(approval));
   } catch (ex) {
     return 0;
   }
@@ -81,8 +60,9 @@ export async function getDaiBalance(networkID: NetworkID, provider: StaticJsonRp
   try {
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, dai_abi, provider);
     const balance = await daiContract.balanceOf(address);
-    return ethers.utils.formatEther(balance);
+    return Number(ethers.utils.formatEther(balance));
   } catch (ex) {
+    console.log(ex);
     return 0;
   }
 }
@@ -90,8 +70,8 @@ export async function getDaiBalance(networkID: NetworkID, provider: StaticJsonRp
 export async function daiApprove(networkID: NetworkID, provider: StaticJsonRpcProvider) {
   try {
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, dai_abi, provider.getSigner());
-    await daiContract.approve(addresses[networkID].PRESALE_ADDRESS, "0xfffffffffffffffffffffffffffffff");
-    return true;
+    return await daiContract.approve(addresses[networkID].PRESALE_ADDRESS, "0xfffffffffffffffffffffffffffffff");
+    // return true;
   } catch (ex) {
     return false;
   }
@@ -104,8 +84,51 @@ export async function doPurchase(networkID: NetworkID, provider: StaticJsonRpcPr
       presale_abi,
       provider.getSigner(),
     );
-    await presaleContract.purchase(val);
-    return true;
+    return await presaleContract.purchase(ethers.utils.parseUnits(val.toString(), 9));
+    // return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export async function getClaimedAmount(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const claimedAmount = await presaleContract.claimedAmount(address);
+    return Number(ethers.utils.parseUnits(claimedAmount, 9));
+  } catch (ex) {
+    return 0;
+  }
+}
+
+export async function getClaimable(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const claimable = await presaleContract.getClaimable();
+    return claimable;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export async function getTimeToClaim(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const time = await presaleContract.getTimeForClaim(address);
+    return time;
+  } catch (ex) {
+    return 0;
+  }
+}
+
+export async function doClaim(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const presaleContract = new ethers.Contract(
+      addresses[networkID].PRESALE_ADDRESS as string,
+      presale_abi,
+      provider.getSigner(),
+    );
+    return await presaleContract.claim();
   } catch (ex) {
     return false;
   }

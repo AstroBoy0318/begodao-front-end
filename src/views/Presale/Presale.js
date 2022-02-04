@@ -11,57 +11,68 @@ import {
   doPurchase,
   getDaiBalance,
   getMaxAmount,
+  getClaimedAmount,
+  getClaimable,
+  doClaim,
+  getTimeToClaim,
 } from "../../helpers/Presale";
 
 function Presale() {
   const { provider, address, connected, connect, chainID } = useWeb3Context();
   let modalButton = [];
   const [isOpened, setIsOpened] = useState(false);
-  const [isPurchased, setIsPurchased] = useState(false);
-  const [price, setPrice] = useState("0");
-  const [approval, setApproval] = useState("0");
-  const [daiBalance, setDaiBalance] = useState("0");
+  const [purchasedAmount, setPurchasedAmount] = useState(false);
+  const [price, setPrice] = useState(0);
+  const [approval, setApproval] = useState(0);
+  const [daiBalance, setDaiBalance] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [maxAmount, setMaxAmount] = useState(0);
+  const [cliamedAmount, setClaimedAmount] = useState(0);
+  const [claimable, setClaimable] = useState(false);
   const getState = async () => {
     if (provider && connected && address) {
       setIsOpened(await isPresaleOpen(chainID, provider, address));
-      setIsPurchased(await getPurchased(chainID, provider, address));
+      setPurchasedAmount(await getPurchased(chainID, provider, address));
       setPrice(await getPrice(chainID, provider, address));
       setApproval(await getDaiApproval(chainID, provider, address));
       setDaiBalance(await getDaiBalance(chainID, provider, address));
       setMaxAmount(await getMaxAmount(chainID, provider, address));
+      setClaimedAmount(await getClaimedAmount(chainID, provider, address));
+      setClaimable(await getClaimable(chainID, provider));
     }
   };
   const [pending, setPending] = useState(false);
   const handlePurchase = () => {
     setPending(true);
     if (Number(approval) > 0) {
-      doPurchase(chainID, provider).then(async re => {
+      if (quantity === 0) {
+        setPending(false);
+        return;
+      } else if (quantity > maxAmount) {
+        setPending(false);
+        setQuantity(maxAmount);
+        return;
+      }
+      doPurchase(chainID, provider, quantity).then(async re => {
         if (re) {
-          setIsOpened(await isPresaleOpen(chainID, provider, address));
-          setIsPurchased(await getPurchased(chainID, provider, address));
+          setIsOpened(false);
+          setPurchasedAmount(quantity);
         }
         setPending(false);
       });
     } else {
       daiApprove(chainID, provider).then(async re => {
-        console.log(re);
         if (re) {
-          setApproval(await getDaiApproval(chainID, provider, address));
+          setApproval(0xffffffff);
         }
         setPending(false);
       });
     }
   };
-  const getMax = () => {
-    const availableAmount = Number(daiBalance) / Number(price);
-    console.log(maxAmount);
-    return availableAmount < maxAmount ? availableAmount : maxAmount;
-  };
   const setMax = () => {
-    setQuantity(getMax());
+    setQuantity(maxAmount);
   };
+  const handleClaim = () => {};
 
   useEffect(() => {
     getState();
@@ -90,28 +101,30 @@ function Presale() {
             ) : (
               <div>
                 {isOpened ? (
-                  isPurchased ? (
+                  Number(purchasedAmount) > 0 ? (
                     <Typography variant="h6" align="center">
                       You have already purchased.
                     </Typography>
                   ) : (
                     <div className="purchase-card">
                       <div className="purchase-input-area">
-                        <OutlinedInput
-                          id="amount-input"
-                          type="number"
-                          placeholder="Enter an amount"
-                          value={quantity}
-                          onChange={e => setQuantity(e.target.value)}
-                          labelWidth={0}
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <Button variant="text" onClick={setMax} color="inherit">
-                                Max
-                              </Button>
-                            </InputAdornment>
-                          }
-                        />
+                        {approval > 0 && (
+                          <OutlinedInput
+                            id="amount-input"
+                            type="number"
+                            placeholder="Enter an amount"
+                            value={quantity}
+                            onChange={e => setQuantity(Number(e.target.value))}
+                            labelWidth={0}
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <Button variant="text" onClick={setMax} color="inherit">
+                                  Max
+                                </Button>
+                              </InputAdornment>
+                            }
+                          />
+                        )}
                         <Button
                           variant="contained"
                           color="primary"
@@ -128,8 +141,16 @@ function Presale() {
                       </Typography>
                     </div>
                   )
+                ) : claimable ? (
+                  <Button variant="text" onClick={handleClaim} color="inherit">
+                    Claim
+                  </Button>
                 ) : (
-                  <Typography variant="h6">Presale is not available now.</Typography>
+                  <Typography variant="h6">
+                    {Number(purchasedAmount) === 0
+                      ? "Presale is not available now."
+                      : `You've already purchased ${purchasedAmount} Bego.`}
+                  </Typography>
                 )}
               </div>
             )}
