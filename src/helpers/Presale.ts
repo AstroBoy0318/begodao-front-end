@@ -95,8 +95,9 @@ export async function getClaimedAmount(networkID: NetworkID, provider: StaticJso
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
     const claimedAmount = await presaleContract.claimedAmount(address);
-    return Number(ethers.utils.parseUnits(claimedAmount, 9));
+    return Number(ethers.utils.formatUnits(claimedAmount, 9));
   } catch (ex) {
+    console.log(ex);
     return 0;
   }
 }
@@ -115,6 +116,16 @@ export async function getTimeToClaim(networkID: NetworkID, provider: StaticJsonR
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
     const time = await presaleContract.getTimeForClaim(address);
+    return time;
+  } catch (ex) {
+    return 0;
+  }
+}
+
+export async function getClaimInterval(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const time = await presaleContract.claimTime();
     return time;
   } catch (ex) {
     return 0;

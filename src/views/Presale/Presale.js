@@ -15,6 +15,7 @@ import {
   getClaimable,
   doClaim,
   getTimeToClaim,
+  getClaimInterval,
 } from "../../helpers/Presale";
 
 function Presale() {
@@ -27,8 +28,11 @@ function Presale() {
   const [daiBalance, setDaiBalance] = useState(0);
   const [quantity, setQuantity] = useState(0);
   const [maxAmount, setMaxAmount] = useState(0);
-  const [cliamedAmount, setClaimedAmount] = useState(0);
+  const [claimedAmount, setClaimedAmount] = useState(0);
   const [claimable, setClaimable] = useState(false);
+  const [timeToClaim, setTimeToClaim] = useState(0);
+  const [nextClaimDate, setNextClaimDate] = useState("");
+  const [claimInterval, setClaimInterval] = useState(0);
   const getState = async () => {
     if (provider && connected && address) {
       setIsOpened(await isPresaleOpen(chainID, provider, address));
@@ -39,6 +43,10 @@ function Presale() {
       setMaxAmount(await getMaxAmount(chainID, provider, address));
       setClaimedAmount(await getClaimedAmount(chainID, provider, address));
       setClaimable(await getClaimable(chainID, provider));
+      setTimeToClaim(await getTimeToClaim(chainID, provider, address));
+      setClaimInterval(await getClaimInterval(chainID, provider));
+      const nextClaim = new Date(new Date().getTime() + timeToClaim * 1000);
+      setNextClaimDate(nextClaim.toLocaleString());
     }
   };
   const [pending, setPending] = useState(false);
@@ -72,7 +80,18 @@ function Presale() {
   const setMax = () => {
     setQuantity(maxAmount);
   };
-  const handleClaim = () => {};
+  const handleClaim = () => {
+    setPending(true);
+    doClaim(chainID, provider).then(re => {
+      if (re) {
+        setTimeToClaim(claimInterval);
+        const nextClaim = new Date(new Date().getTime() + claimInterval * 1000);
+        setNextClaimDate(nextClaim.toLocaleString());
+        setClaimedAmount(claimedAmount + purchasedAmount / 5);
+      }
+      setPending(false);
+    });
+  };
 
   useEffect(() => {
     getState();
@@ -142,9 +161,17 @@ function Presale() {
                     </div>
                   )
                 ) : claimable ? (
-                  <Button variant="text" onClick={handleClaim} color="inherit">
-                    Claim
-                  </Button>
+                  <div className="purchase-card">
+                    <Button
+                      variant="contained"
+                      onClick={handleClaim}
+                      color="primary"
+                      disabled={pending || timeToClaim > 0}
+                    >
+                      {timeToClaim > 0 ? `Next claim time is ${nextClaimDate}` : "Claim"}
+                    </Button>
+                    <Typography variant="h6">Your claimable amount is {purchasedAmount - claimedAmount}.</Typography>
+                  </div>
                 ) : (
                   <Typography variant="h6">
                     {Number(purchasedAmount) === 0
