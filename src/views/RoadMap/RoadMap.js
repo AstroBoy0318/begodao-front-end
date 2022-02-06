@@ -24,8 +24,8 @@ function RoadMap() {
       ),
     },
     {
-      title: "Start Presale",
-      subheader: "7/2/2022",
+      title: "Presale",
+      subheader: "7/2/2022 - Open Whitelist",
       description: [""],
       icon: (
         <Avatar>

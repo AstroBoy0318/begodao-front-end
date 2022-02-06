@@ -77,7 +77,7 @@ export const calcBondDetails = createAsyncThunk(
     if (!value) {
       value = "0";
     }
-    const amountInWei = ethers.utils.parseEther(value);
+    const amountInWei = ethers.utils.parseEther((Number(value) * 0.98).toString());
 
     // const vestingTerm = VESTING_TERM; // hardcoded for now
     let bondPrice = 0,
@@ -198,7 +198,7 @@ export const bondAsset = createAsyncThunk(
       txHash: null,
     };
     try {
-      console.log(bondContract, valueInWei, maxPremium, depositorAddress);
+      console.log(bondContract, maxPremium, depositorAddress);
       bondTx = await bondContract.deposit(valueInWei, maxPremium, depositorAddress);
       dispatch(
         fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "bond_" + bond.name }),

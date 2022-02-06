@@ -2,7 +2,8 @@ import { StableBond, LPBond, NetworkID, CustomBond, BondType } from "src/lib/Bon
 import { addresses } from "src/constants";
 
 import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
-import { ReactComponent as OhmDaiImg } from "src/assets/tokens/OHM-DAI.svg";
+import { ReactComponent as WFTMImg } from "src/assets/tokens/WFTM.svg";
+import { ReactComponent as OhmDaiImg } from "src/assets/tokens/BEGO-DAI.svg";
 
 import { abi as BondOhmDaiContract } from "src/abi/bonds/OhmDaiContract.json";
 import { abi as ReserveOhmDaiContract } from "src/abi/reserves/OhmDai.json";
@@ -35,7 +36,7 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x219c0B94892CcFA1eE727667aB997C78a091D04D",
+      bondAddress: "0xB64eDCe7E48cd0a2d89732B9CaD161592918Ad64",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
     },
     [NetworkID.Fantom]: {
@@ -51,7 +52,7 @@ export const dai = new StableBond({
 
 export const ohm_dai = new LPBond({
   name: "bego_dai_lp",
-  displayName: "BEGO-DAI LP",
+  displayName: "BEGO - DAI LP",
   bondToken: "DAI",
   isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
   bondIconSvg: OhmDaiImg,
@@ -67,8 +68,8 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0xE2cee0B6EAb4643C36f87030441Fb431bBCB2f91",
-      reserveAddress: "0xc51bd1805b165C72932C2a65798FB994454632ee",
+      bondAddress: "0xC812938a99f8238aF69679c3a7AEFAEc8460B195",
+      reserveAddress: "0x69A7943196d5e49862aDe90A975a666eC33aC821",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
@@ -88,7 +89,7 @@ export const wftm = new StableBond({
   displayName: "WFTM",
   bondToken: "WFTM",
   isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
-  bondIconSvg: DaiImg,
+  bondIconSvg: WFTMImg,
   bondContractABI: BondOhmDaiContract,
   networkAddrs: {
     [NetworkID.Mainnet]: {
@@ -100,7 +101,7 @@ export const wftm = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x9E8E94EB1292B2B82f2b434E9ed3cc3D2f6E6786",
+      bondAddress: "0x438Ea655f735588CA92B88d80E198E9611e1375E",
       reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
     },
     [NetworkID.Fantom]: {
