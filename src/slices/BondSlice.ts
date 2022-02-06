@@ -77,7 +77,7 @@ export const calcBondDetails = createAsyncThunk(
     if (!value) {
       value = "0";
     }
-    const amountInWei = ethers.utils.parseEther((Number(value) * 0.98).toString());
+    const amountInWei = ethers.utils.parseEther(value);
 
     // const vestingTerm = VESTING_TERM; // hardcoded for now
     let bondPrice = 0,
@@ -121,7 +121,7 @@ export const calcBondDetails = createAsyncThunk(
         const errorString = "Amount is too small!";
         dispatch(error(errorString));
       } else {
-        bondQuote = bondQuote / Math.pow(10, 9);
+        bondQuote = (bondQuote / Math.pow(10, 9)) * 0.98;
       }
     } else {
       // RFV = DAI

@@ -63,15 +63,14 @@ function Presale() {
       }
       doPurchase(chainID, provider, quantity).then(async re => {
         if (re) {
-          setIsOpened(false);
-          setPurchasedAmount(quantity);
+          getState();
         }
         setPending(false);
       });
     } else {
       daiApprove(chainID, provider).then(async re => {
         if (re) {
-          setApproval(0xffffffff);
+          getState();
         }
         setPending(false);
       });
@@ -84,10 +83,7 @@ function Presale() {
     setPending(true);
     doClaim(chainID, provider).then(re => {
       if (re) {
-        setTimeToClaim(claimInterval);
-        const nextClaim = new Date(new Date().getTime() + claimInterval * 1000);
-        setNextClaimDate(nextClaim.toLocaleString());
-        setClaimedAmount(claimedAmount + purchasedAmount / 5);
+        getState();
       }
       setPending(false);
     });

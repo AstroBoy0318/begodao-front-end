@@ -70,8 +70,9 @@ export async function getDaiBalance(networkID: NetworkID, provider: StaticJsonRp
 export async function daiApprove(networkID: NetworkID, provider: StaticJsonRpcProvider) {
   try {
     const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, dai_abi, provider.getSigner());
-    return await daiContract.approve(addresses[networkID].PRESALE_ADDRESS, "0xfffffffffffffffffffffffffffffff");
-    // return true;
+    const tx = await daiContract.approve(addresses[networkID].PRESALE_ADDRESS, "0xfffffffffffffffffffffffffffffff");
+    await tx.wait();
+    return true;
   } catch (ex) {
     return false;
   }
@@ -84,8 +85,9 @@ export async function doPurchase(networkID: NetworkID, provider: StaticJsonRpcPr
       presale_abi,
       provider.getSigner(),
     );
-    return await presaleContract.purchase(ethers.utils.parseUnits(val.toString(), 9));
-    // return true;
+    const tx = await presaleContract.purchase(ethers.utils.parseUnits(val.toString(), 9));
+    await tx.wait();
+    return true;
   } catch (ex) {
     return false;
   }
@@ -139,7 +141,9 @@ export async function doClaim(networkID: NetworkID, provider: StaticJsonRpcProvi
       presale_abi,
       provider.getSigner(),
     );
-    return await presaleContract.claim();
+    const tx = await presaleContract.claim();
+    await tx.wait();
+    return true;
   } catch (ex) {
     return false;
   }
