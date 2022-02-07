@@ -43,9 +43,10 @@ function Presale() {
       setMaxAmount(await getMaxAmount(chainID, provider, address));
       setClaimedAmount(await getClaimedAmount(chainID, provider, address));
       setClaimable(await getClaimable(chainID, provider));
-      setTimeToClaim(await getTimeToClaim(chainID, provider, address));
+      const _timeToClaim = await getTimeToClaim(chainID, provider, address);
+      setTimeToClaim(_timeToClaim);
       setClaimInterval(await getClaimInterval(chainID, provider));
-      const nextClaim = new Date(new Date().getTime() + timeToClaim * 1000);
+      const nextClaim = new Date(new Date().getTime() + _timeToClaim * 1000);
       setNextClaimDate(nextClaim.toLocaleString());
     }
   };

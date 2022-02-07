@@ -17,9 +17,15 @@
 #roadmap-content .MuiCardContent-root{
     padding-bottom: 0px;
 }
-#roadmap-content .MuiGrid-item:nth-child(1) .TimelineBase-cardDecoratorLeft-18{
+#roadmap-content .MuiGrid-item:nth-child(1) .TimelineBase-cardDecoratorLeft-18, #roadmap-content .MuiGrid-item:nth-child(1) jss18{
     border-left: 16px solid #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(1) .MuiCard-root{
+    background: #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(6) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(6) jss19{
+    border-right: 16px solid #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(6) .MuiCard-root{
     background: #63bd7f;
 }

@@ -118,7 +118,7 @@ export async function getTimeToClaim(networkID: NetworkID, provider: StaticJsonR
   try {
     const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
     const time = await presaleContract.getTimeForClaim(address);
-    return time;
+    return time.toNumber();
   } catch (ex) {
     return 0;
   }

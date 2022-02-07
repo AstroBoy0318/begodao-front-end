@@ -7,7 +7,7 @@ import commonSettings from "./global.js";
 
 const darkTheme = {
   color: "#FCFCFC",
-  gold: "#F8CC82",
+  gold: "#C67736",
   gray: "#A3A3A3",
   textHighlightColor: "#eb6d07",
   backgroundColor: "rgba(8, 15, 53, 1)",
@@ -23,12 +23,12 @@ const darkTheme = {
     "brightness(0) saturate(100%) invert(84%) sepia(49%) saturate(307%) hue-rotate(326deg) brightness(106%) contrast(92%)",
   primaryButtonColor: "#333333",
   primaryButtonBG: "#F4D092",
-  primaryButtonHoverBG: "#EDD8B4",
+  primaryButtonHoverBG: "#E69A5C",
   secondaryButtonHoverBG: "rgba(54, 56, 64, 1)",
-  outlinedPrimaryButtonHoverBG: "#F8CC82",
+  outlinedPrimaryButtonHoverBG: "#C6681B",
   outlinedPrimaryButtonHoverColor: "#333333",
   outlinedSecondaryButtonHoverBG: "transparent",
-  outlinedSecondaryButtonHoverColor: "#F8CC82", //gold
+  outlinedSecondaryButtonHoverColor: "#C6681B", //gold
   containedSecondaryButtonHoverBG: "rgba(255, 255, 255, 0.15)",
   graphStrokeColor: "rgba(255, 255, 255, .1)",
 };
@@ -252,7 +252,7 @@ export const dark = responsiveFontSizes(
             },
             "&:active": {
               color: darkTheme.gold,
-              borderBottom: "#F8CC82",
+              borderBottom: "#A41414",
             },
           },
           textSecondary: {
