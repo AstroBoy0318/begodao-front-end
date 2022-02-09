@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
 import Social from "./Social";
 import externalUrls from "./externalUrls";
@@ -8,18 +8,25 @@ import { ReactComponent as DashboardIcon } from "../../assets/icons/dashboard.sv
 import { ReactComponent as PresaleIcon } from "../../assets/icons/presale.svg";
 import { ReactComponent as RoadMapIcon } from "../../assets/icons/road-map.svg";
 import { ReactComponent as NFTIcon } from "../../assets/icons/nft-icon.svg";
+import { ReactComponent as UpArrow } from "../../assets/icons/up-arrow.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
 import { Paper, Link, Box, Typography, SvgIcon } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 import "./sidebar.scss";
+import Button from "@material-ui/core/Button";
+import { OrderContext } from "../../context/OrderContext";
 
 function NavContent() {
   const [isActive] = useState();
   const address = useAddress();
-  const { bonds } = useBonds();
+  const { bonds, order, setOrder } = useBonds();
   const { chainID } = useWeb3Context();
+  const changeOrder = () => {
+    toggleValue();
+  };
+  const { bondOrder, toggleValue } = useContext(OrderContext);
 
   const checkPage = useCallback((match, location, page) => {
     const currentPath = location.pathname.replace("/", "");
@@ -167,6 +174,13 @@ function NavContent() {
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={BondIcon} />
                   Bonds
+                  <Button onClick={changeOrder}>
+                    {bondOrder === "asc" ? (
+                      <SvgIcon color="primary" component={UpArrow} viewBox="0 0 330 330" />
+                    ) : (
+                      <SvgIcon color="primary" className="rotate-x-180" component={UpArrow} viewBox="0 0 330 330" />
+                    )}
+                  </Button>
                 </Typography>
               </Link>
 

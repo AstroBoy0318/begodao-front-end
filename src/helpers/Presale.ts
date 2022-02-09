@@ -148,3 +148,23 @@ export async function doClaim(networkID: NetworkID, provider: StaticJsonRpcProvi
     return false;
   }
 }
+
+export async function getMaxSupply(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const totalAmount = await presaleContract.totalAmount();
+    return Number(ethers.utils.formatUnits(totalAmount, 9));
+  } catch (ex) {
+    return 0;
+  }
+}
+
+export async function getTotalSold(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const totalSold = await presaleContract.sellAmount();
+    return Number(ethers.utils.formatUnits(totalSold, 9));
+  } catch (ex) {
+    return 0;
+  }
+}

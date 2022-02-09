@@ -2,6 +2,14 @@
   max-width: 800px;
   margin: 0 auto;
 }
+#presale-card .header {
+  display: flex;
+  padding-bottom: 10px;
+  justify-content: space-around;
+}
+#presale-card .header div {
+  text-align: center;
+}
 #presale-card .data-row {
   justify-content: space-around;
 }

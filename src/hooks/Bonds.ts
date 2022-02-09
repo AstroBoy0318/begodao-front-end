@@ -1,9 +1,10 @@
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import allBonds from "src/helpers/AllBonds";
 import { IUserBondDetails } from "src/slices/AccountSlice";
 import { Bond } from "src/lib/Bond";
 import { IBondDetails } from "src/slices/BondSlice";
+import { OrderContext } from "../context/OrderContext";
 
 interface IBondingStateView {
   account: {
@@ -27,6 +28,7 @@ function useBonds() {
   const bondState = useSelector((state: IBondingStateView) => state.bonding);
   const accountBondsState = useSelector((state: IBondingStateView) => state.account.bonds);
   const [bonds, setBonds] = useState<Bond[] | IAllBondData[]>(initialBondArray);
+  const { bondOrder, toggleValue } = useContext(OrderContext);
 
   useEffect(() => {
     console.log("bondState", bondState, "accountBondsState", accountBondsState);
@@ -46,11 +48,13 @@ function useBonds() {
       });
 
     const mostProfitableBonds = bondDetails.concat().sort((a, b) => {
-      return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
+      if (bondOrder === "desc")
+        return a["bondDiscount"] > b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
+      else return a["bondDiscount"] < b["bondDiscount"] ? -1 : b["bondDiscount"] > a["bondDiscount"] ? 1 : 0;
     });
 
     setBonds(mostProfitableBonds);
-  }, [bondState, accountBondsState, bondLoading]);
+  }, [bondState, accountBondsState, bondLoading, bondOrder]);
 
   // Debug Log:
   return { bonds, loading: bondLoading };

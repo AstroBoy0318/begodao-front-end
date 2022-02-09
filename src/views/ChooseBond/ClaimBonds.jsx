@@ -106,7 +106,7 @@ function ClaimBonds({ activeBonds }) {
                         onRedeemAll({ autostake: false });
                       }}
                     >
-                      {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", "Claim all")}
+                      {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", "Claim All")}
                     </Button>
 
                     <Button
@@ -123,7 +123,7 @@ function ClaimBonds({ activeBonds }) {
                       {txnButtonTextGeneralPending(
                         pendingTransactions,
                         "redeem_all_bonds_autostake",
-                        "Claim all and Stake",
+                        "Claim All and Stake",
                       )}
                     </Button>
                   </>

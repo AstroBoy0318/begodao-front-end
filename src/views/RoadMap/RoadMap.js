@@ -24,8 +24,8 @@ function RoadMap() {
       ),
     },
     {
-      title: "Presale",
-      subheader: "7/2/2022 - Open Whitelist",
+      title: "Presale Whitelist",
+      subheader: "Open 10/2/2022",
       description: [""],
       icon: (
         <Avatar>
@@ -34,7 +34,8 @@ function RoadMap() {
       ),
     },
     {
-      title: "Presale Finished",
+      title: "Public Presale",
+      subheader: "Open 11/2/2022",
       description: [""],
       icon: (
         <Avatar>

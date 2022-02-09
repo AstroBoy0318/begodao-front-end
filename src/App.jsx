@@ -30,6 +30,7 @@ import { light as lightTheme } from "./themes/light.js";
 import { girth as gTheme } from "./themes/girth.js";
 import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
+import { OrderContextProvider } from "./context/OrderContext";
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -94,6 +95,7 @@ function App() {
   const isAppLoading = useSelector(state => state.app.loading);
   const isAppLoaded = useSelector(state => typeof state.app.marketPrice != "undefined"); // Hacky way of determining if we were able to load app Details.
   const { bonds } = useBonds();
+
   async function loadDetails(whichDetails) {
     // NOTE (unbanksy): If you encounter the following error:
     // Unhandled Rejection (Error): call revert exception (method="balanceOf(address)", errorArgs=null, errorName=null, errorSignature=null, reason=null, code=CALL_EXCEPTION, version=abi/5.4.0)
@@ -198,66 +200,68 @@ function App() {
 
   return (
     <ThemeProvider theme={themeMode}>
-      <CssBaseline />
-      {/* {isAppLoading && <LoadingSplash />} */}
-      <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
-        <Messages />
-        <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
-        <nav className={classes.drawer}>
-          {isSmallerScreen ? (
-            <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
-          ) : (
-            <Sidebar />
-          )}
-        </nav>
+      <OrderContextProvider>
+        <CssBaseline />
+        {/* {isAppLoading && <LoadingSplash />} */}
+        <div className={`app ${isSmallerScreen && "tablet"} ${isSmallScreen && "mobile"} ${theme}`}>
+          <Messages />
+          <TopBar theme={theme} toggleTheme={toggleTheme} handleDrawerToggle={handleDrawerToggle} />
+          <nav className={classes.drawer}>
+            {isSmallerScreen ? (
+              <NavDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle} />
+            ) : (
+              <Sidebar />
+            )}
+          </nav>
 
-        <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
-          <Switch>
-            <Route exact path="/presale">
-              <Presale />
-            </Route>
+          <div className={`${classes.content} ${isSmallerScreen && classes.contentShift}`}>
+            <Switch>
+              <Route exact path="/presale">
+                <Presale />
+              </Route>
 
-            <Route exact path="/roadmap">
-              <RoadMap />
-            </Route>
+              <Route exact path="/roadmap">
+                <RoadMap />
+              </Route>
 
-            <Route exact path="/dashboard">
-              <TreasuryDashboard />
-            </Route>
+              <Route exact path="/dashboard">
+                <TreasuryDashboard />
+              </Route>
 
-            <Route exact path="/">
-              <Redirect to="/dashboard" />
-            </Route>
+              <Route exact path="/">
+                <Redirect to="/dashboard" />
+              </Route>
 
-            <Route path="/stake">
-              <Stake />
-            </Route>
+              <Route path="/stake">
+                <Stake />
+              </Route>
 
-            <Route path="/nft">
-              <Nft />
-            </Route>
+              <Route path="/nft">
+                <Nft />
+              </Route>
 
-            {/*
+              {/*
 				<Route path="/33-together">
 				<PoolTogether />
 				</Route>
 			*/}
 
-            <Route path="/bonds">
-              {bonds.map(bond => {
-                return (
-                  <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
-                    <Bond bond={bond} />
-                  </Route>
-                );
-              })}
-              <ChooseBond />
-            </Route>
+              <Route path="/bonds">
+                {bonds.map(bond => {
+                  return (
+                    <Route exact key={bond.name} path={`/bonds/${bond.name}`}>
+                      <Bond bond={bond} />
+                    </Route>
+                  );
+                })}
+                <ChooseBond />
+              </Route>
 
-            <Route component={NotFound} />
-          </Switch>
+              <Route component={NotFound} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </OrderContextProvider>
     </ThemeProvider>
   );
 }

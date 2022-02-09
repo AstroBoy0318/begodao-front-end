@@ -71,7 +71,7 @@ function RebaseTimer() {
               <strong>{rebaseString}</strong> to next rebase
             </>
           ) : (
-            <strong>rebasing</strong>
+            <strong>Rebasing Now</strong>
           )
         ) : (
           <Skeleton width="155px" />

@@ -45,7 +45,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   async function onBond() {
     if (quantity === "") {
       dispatch(error("Please enter a value!"));
-    } else if (isNaN(quantity)) {
+    } else if (isNaN(quantity) || quantity === "0") {
       dispatch(error("Please enter a valid value!"));
     } else if (bond.interestDue > 0 || bond.pendingPayout > 0) {
       const shouldProceed = window.confirm(
@@ -239,6 +239,11 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
           <div className="data-row">
             <Typography>Vesting Term</Typography>
             <Typography>{isBondLoading ? <Skeleton width="100px" /> : vestingPeriod()}</Typography>
+          </div>
+
+          <div className="data-row">
+            <Typography>Deposit Fee ( DAO )</Typography>
+            <Typography>2%</Typography>
           </div>
 
           {recipientAddress !== address && (

@@ -16,6 +16,8 @@ import {
   doClaim,
   getTimeToClaim,
   getClaimInterval,
+  getMaxSupply,
+  getTotalSold,
 } from "../../helpers/Presale";
 
 function Presale() {
@@ -33,19 +35,45 @@ function Presale() {
   const [timeToClaim, setTimeToClaim] = useState(0);
   const [nextClaimDate, setNextClaimDate] = useState("");
   const [claimInterval, setClaimInterval] = useState(0);
+  const [maxSupply, setMaxSupply] = useState(0);
+  const [totalSold, setTotalSold] = useState(0);
   const getState = async () => {
     if (provider && connected && address) {
-      setIsOpened(await isPresaleOpen(chainID, provider, address));
-      setPurchasedAmount(await getPurchased(chainID, provider, address));
-      setPrice(await getPrice(chainID, provider, address));
-      setApproval(await getDaiApproval(chainID, provider, address));
-      setDaiBalance(await getDaiBalance(chainID, provider, address));
-      setMaxAmount(await getMaxAmount(chainID, provider, address));
-      setClaimedAmount(await getClaimedAmount(chainID, provider, address));
-      setClaimable(await getClaimable(chainID, provider));
+      isPresaleOpen(chainID, provider, address).then(re => {
+        setIsOpened(re);
+      });
+      getPurchased(chainID, provider, address).then(re => {
+        setPurchasedAmount(re);
+      });
+      getPrice(chainID, provider, address).then(re => {
+        setPrice(re);
+      });
+      getDaiApproval(chainID, provider, address).then(re => {
+        setApproval(re);
+      });
+      getDaiBalance(chainID, provider, address).then(re => {
+        setDaiBalance(re);
+      });
+      getMaxAmount(chainID, provider, address).then(re => {
+        setMaxAmount(re);
+      });
+      getClaimedAmount(chainID, provider, address).then(re => {
+        setClaimedAmount(re);
+      });
+      getClaimable(chainID, provider).then(re => {
+        setClaimable(re);
+      });
+      getMaxSupply(chainID, provider).then(re => {
+        setMaxSupply(re);
+      });
+      getTotalSold(chainID, provider).then(re => {
+        setTotalSold(re);
+      });
       const _timeToClaim = await getTimeToClaim(chainID, provider, address);
       setTimeToClaim(_timeToClaim);
-      setClaimInterval(await getClaimInterval(chainID, provider));
+      getClaimInterval(chainID, provider).then(re => {
+        setClaimInterval(re);
+      });
       const nextClaim = new Date(new Date().getTime() + _timeToClaim * 1000);
       setNextClaimDate(nextClaim.toLocaleString());
     }
@@ -103,8 +131,15 @@ function Presale() {
     <Paper className={`ohm-card`} id="presale-card">
       <Grid container direction="column" spacing={2}>
         <Grid item>
-          <div className="card-header">
-            <Typography variant="h5">Buy Bego</Typography>
+          <div class="header">
+            <div>
+              <Typography variant="h5">Max Supply</Typography>
+              <Typography variant="h6">{maxSupply.toLocaleString()}</Typography>
+            </div>
+            <div>
+              <Typography variant="h5">Total Sold</Typography>
+              <Typography variant="h6">{totalSold.toLocaleString()}</Typography>
+            </div>
           </div>
           <div className="data-row">
             {!address ? (
@@ -117,7 +152,7 @@ function Presale() {
             ) : (
               <div>
                 {isOpened ? (
-                  Number(purchasedAmount) > 0 ? (
+                  Number(purchasedAmount) > 0 && maxAmount === 0 ? (
                     <Typography variant="h6" align="center">
                       You have already purchased.
                     </Typography>
