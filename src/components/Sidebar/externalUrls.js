@@ -7,12 +7,12 @@ import { SvgIcon } from "@material-ui/core";
 const externalUrls = [
   {
     title: "Governance",
-    url: "https://vote.begoikodao.com/",
+    url: "",
     icon: <SvgIcon color="primary" component={GovIcon} />,
   },
   {
     title: "Docs",
-    url: "https://docs.begoikodao.com/",
+    url: "https://docs.begodao.com",
     icon: <SvgIcon color="primary" component={DocsIcon} />,
   },
 ];

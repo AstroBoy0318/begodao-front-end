@@ -18,6 +18,8 @@ import {
   getClaimInterval,
   getMaxSupply,
   getTotalSold,
+  getSaleTime,
+  getTotalRaised,
 } from "../../helpers/Presale";
 
 function Presale() {
@@ -37,6 +39,9 @@ function Presale() {
   const [claimInterval, setClaimInterval] = useState(0);
   const [maxSupply, setMaxSupply] = useState(0);
   const [totalSold, setTotalSold] = useState(0);
+  const [saleTime, setSaleTime] = useState({});
+  const [saleDiscount, setSaleDiscount] = useState("");
+  const [totalRaised, setTotalRaised] = useState(0);
   const getState = async () => {
     if (provider && connected && address) {
       isPresaleOpen(chainID, provider, address).then(re => {
@@ -68,6 +73,9 @@ function Presale() {
       });
       getTotalSold(chainID, provider).then(re => {
         setTotalSold(re);
+      });
+      getTotalRaised(chainID, provider).then(re => {
+        setTotalRaised(re);
       });
       const _timeToClaim = await getTimeToClaim(chainID, provider, address);
       setTimeToClaim(_timeToClaim);
@@ -120,7 +128,42 @@ function Presale() {
 
   useEffect(() => {
     getState();
+    getSaleTime(chainID, provider, address).then(re => {
+      setSaleTime(re);
+    });
   }, [provider, address, connected, chainID]);
+
+  const getFormatedTimeString = time => {
+    let val = time;
+    let re = "";
+    if (val >= 86400) {
+      re = re.concat(Math.floor(val / 86400)).concat("Day(s) ");
+      val = val % 86400;
+    }
+    if (val >= 3600) {
+      re = re.concat(Math.floor(val / 3600)).concat("Hour(s) ");
+      val = val % 3600;
+    }
+    if (val >= 60) {
+      re = re.concat(Math.floor(val / 60)).concat("Minute(s) ");
+      val = val % 60;
+    }
+    re = re.concat(val).concat("second(s)");
+    return re;
+  };
+
+  setInterval(() => {
+    if (saleTime.startTime) {
+      const now = Math.floor(new Date().getTime() / 1000);
+      if (saleTime.startTime + saleTime.privateSale > now) {
+        const remainedTime = saleTime.startTime + saleTime.privateSale - now;
+        setSaleDiscount(`Private sale ends in ${getFormatedTimeString(remainedTime)}.`);
+      } else if (saleTime.startTime + saleTime.privateSale + saleTime.publicSale > now) {
+        const remainedTime = saleTime.startTime + saleTime.privateSale + saleTime.publicSale - now;
+        setSaleDiscount(`Private sale ends in ${getFormatedTimeString(remainedTime)}.`);
+      } else if (saleTime.startTime > 0) setSaleDiscount("Presale is finished.");
+    }
+  }, 1000);
 
   modalButton.push(
     <Button variant="contained" color="primary" className="connect-button" onClick={connect} key={1}>
@@ -137,6 +180,10 @@ function Presale() {
               <Typography variant="h6">{maxSupply.toLocaleString()}</Typography>
             </div>
             <div>
+              <Typography variant="h5">Total Raised(dai)</Typography>
+              <Typography variant="h6">{totalRaised.toLocaleString()}</Typography>
+            </div>
+            <div>
               <Typography variant="h5">Total Sold</Typography>
               <Typography variant="h6">{totalSold.toLocaleString()}</Typography>
             </div>
@@ -147,14 +194,14 @@ function Presale() {
                 <div className="wallet-menu" id="wallet-menu">
                   {modalButton}
                 </div>
-                <Typography variant="h6">Connect your wallet to buy pBego or claim BEGO</Typography>
+                <Typography variant="h6">Connect your wallet to buy or claim BEGO</Typography>
               </div>
             ) : (
               <div>
                 {isOpened ? (
                   Number(purchasedAmount) > 0 && maxAmount === 0 ? (
                     <Typography variant="h6" align="center">
-                      You have already purchased.
+                      You can't purchase anymore.
                     </Typography>
                   ) : (
                     <div className="purchase-card">
@@ -187,30 +234,37 @@ function Presale() {
                           {approval > 0 ? "Purchase Bego" : "Approve"}
                         </Button>
                       </div>
-                      <Typography variant="h6" align="center">
-                        {price} dai per 1 pBego.(Your dai balance: {daiBalance})
-                      </Typography>
                     </div>
                   )
-                ) : claimable ? (
-                  <div className="purchase-card">
-                    <Button
-                      variant="contained"
-                      onClick={handleClaim}
-                      color="primary"
-                      disabled={pending || timeToClaim > 0}
-                    >
-                      {timeToClaim > 0 ? `Next claim time is ${nextClaimDate}` : "Claim"}
-                    </Button>
-                    <Typography variant="h6">Your claimable amount is {purchasedAmount - claimedAmount}.</Typography>
-                  </div>
                 ) : (
-                  <Typography variant="h6">
-                    {Number(purchasedAmount) === 0
-                      ? "Presale is not available now."
-                      : `You've already purchased ${purchasedAmount} Bego.`}
-                  </Typography>
+                  claimable && (
+                    <div className="purchase-card">
+                      <Button
+                        variant="contained"
+                        onClick={handleClaim}
+                        color="primary"
+                        disabled={pending || timeToClaim > 0}
+                      >
+                        {timeToClaim > 0 ? `Next claim time is ${nextClaimDate}` : "Claim"}
+                      </Button>
+                      <Typography variant="h6">Your claimable amount is {purchasedAmount - claimedAmount}.</Typography>
+                    </div>
+                  )
                 )}
+                <div>
+                  <Typography variant="h6" align="center">
+                    Bego price: {price} Dai.
+                  </Typography>
+                  <Typography variant="h6" align="center">
+                    Your dai balance: {daiBalance.toLocaleString(undefined, { maximumFractionDigits: 3 })} Dai
+                  </Typography>
+                  <Typography variant="h6" align="center">
+                    {Number(purchasedAmount) === 0 && `You have purchased ${purchasedAmount} Bego.`}
+                  </Typography>
+                  <Typography variant="h6" align="center">
+                    {saleDiscount}
+                  </Typography>
+                </div>
               </div>
             )}
           </div>

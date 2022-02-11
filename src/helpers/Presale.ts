@@ -168,3 +168,31 @@ export async function getTotalSold(networkID: NetworkID, provider: StaticJsonRpc
     return 0;
   }
 }
+
+export async function getSaleTime(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
+  try {
+    const presaleContract = new ethers.Contract(addresses[networkID].PRESALE_ADDRESS as string, presale_abi, provider);
+    const saleStartTime = Number(await presaleContract.saleStartTime());
+    const privateSalePeriod = Number(await presaleContract.privateSalePeriod());
+    const publicSalePeriod = Number(await presaleContract.publicSalePeriod());
+    const whitelist = Number(await presaleContract.whiteListed[address]);
+    return {
+      startTime: saleStartTime,
+      privateSale: privateSalePeriod,
+      publicSale: publicSalePeriod,
+      whitelist: whitelist,
+    };
+  } catch (ex) {
+    return {};
+  }
+}
+
+export async function getTotalRaised(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  try {
+    const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, dai_abi, provider);
+    const totalAmount = await daiContract.balanceOf(addresses[networkID].PRESALE_ADDRESS as string);
+    return Number(ethers.utils.formatEther(totalAmount));
+  } catch (ex) {
+    return 0;
+  }
+}

@@ -36,7 +36,7 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x9370D2aab0F5fb101fE23379F97ff35fb02d3754",
+      bondAddress: "0xe1af7F331ef5543daDA8693dB672940012191b2c",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
     },
     [NetworkID.Fantom]: {
