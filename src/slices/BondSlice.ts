@@ -16,6 +16,7 @@ import {
   IRedeemBondAsyncThunk,
 } from "./interfaces";
 import { segmentUA } from "../helpers/userAnalyticHelpers";
+import { getTokenPrice } from "../helpers/GetPrice";
 
 export const changeApproval = createAsyncThunk(
   "bonding/changeApproval",
@@ -104,6 +105,7 @@ export const calcBondDetails = createAsyncThunk(
 
     try {
       bondPrice = await bondContract.bondPriceInUSD();
+      bondPrice = (await getTokenPrice(networkID, provider, bond.getAddressForReserve(networkID))) * bondPrice;
       // bondDiscount = (marketPrice * Math.pow(10, 9) - bondPrice) / bondPrice; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
       bondDiscount = (marketPrice * Math.pow(10, 18) - bondPrice) / bondPrice; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
     } catch (e) {

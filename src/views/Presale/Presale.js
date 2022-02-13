@@ -160,7 +160,7 @@ function Presale() {
         setSaleDiscount(`Private sale ends in ${getFormatedTimeString(remainedTime)}.`);
       } else if (saleTime.startTime + saleTime.privateSale + saleTime.publicSale > now) {
         const remainedTime = saleTime.startTime + saleTime.privateSale + saleTime.publicSale - now;
-        setSaleDiscount(`Private sale ends in ${getFormatedTimeString(remainedTime)}.`);
+        setSaleDiscount(`Public sale ends in ${getFormatedTimeString(remainedTime)}.`);
       } else if (saleTime.startTime > 0) setSaleDiscount("Presale is finished.");
     }
   }, 1000);
@@ -259,7 +259,7 @@ function Presale() {
                     Your dai balance: {daiBalance.toLocaleString(undefined, { maximumFractionDigits: 3 })} Dai
                   </Typography>
                   <Typography variant="h6" align="center">
-                    {Number(purchasedAmount) === 0 && `You have purchased ${purchasedAmount} Bego.`}
+                    {Number(purchasedAmount) > 0 && `You have purchased ${purchasedAmount} Bego.`}
                   </Typography>
                   <Typography variant="h6" align="center">
                     {saleDiscount}

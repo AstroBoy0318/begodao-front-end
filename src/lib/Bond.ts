@@ -11,6 +11,7 @@ export enum NetworkID {
   Testnet = 4,
   FantomTestnet = 4002,
   Fantom = 250,
+  Mumbai = 80001,
   Local = 1337,
 }
 
@@ -29,6 +30,7 @@ export interface NetworkAddresses {
   [NetworkID.Testnet]: BondAddresses;
   [NetworkID.FantomTestnet]: BondAddresses;
   [NetworkID.Fantom]: BondAddresses;
+  [NetworkID.Mumbai]: BondAddresses;
   [NetworkID.Local]: BondAddresses;
 }
 
@@ -37,6 +39,7 @@ export interface Available {
   [NetworkID.Testnet]?: boolean;
   [NetworkID.FantomTestnet]?: boolean;
   [NetworkID.Fantom]?: boolean;
+  [NetworkID.Mumbai]?: boolean;
   [NetworkID.Local]?: boolean;
 }
 

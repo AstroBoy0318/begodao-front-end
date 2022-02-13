@@ -22,6 +22,7 @@ export const dai = new StableBond({
     [NetworkID.Testnet]: true,
     [NetworkID.FantomTestnet]: true,
     [NetworkID.Fantom]: true,
+    [NetworkID.Mumbai]: true,
     [NetworkID.Local]: true,
   },
   bondIconSvg: DaiImg,
@@ -36,8 +37,12 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0xe1af7F331ef5543daDA8693dB672940012191b2c",
+      bondAddress: "0x452B9e16f5dE21372B9a83CFC1Cf080FACa06D67",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
+    },
+    [NetworkID.Mumbai]: {
+      bondAddress: "0x3ce09e737777C0a93663F344Afe510CB45a27073",
+      reserveAddress: "0xef45e6E3159e9F302D2B85f6E777791d7B7e98d8",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
@@ -54,7 +59,7 @@ export const ohm_dai = new LPBond({
   name: "bego_dai_lp",
   displayName: "BEGO - DAI LP",
   bondToken: "DAI",
-  isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
+  isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true, [NetworkID.Mumbai]: true },
   bondIconSvg: OhmDaiImg,
   bondContractABI: BondOhmDaiContract,
   reserveContract: ReserveOhmDaiContract,
@@ -68,8 +73,12 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x43Ce2EF97A80FD944F70350ef59D4aa5FB51086E",
-      reserveAddress: "0x1ebcb5ea15cee331259c55d4218e1f5acbc94ae6",
+      bondAddress: "0xb160DB3963FDe16777AEcAE44b441bC7a0E4B260",
+      reserveAddress: "0xb1afd9f533a2b4778fce9a0a4638e0580e16269b",
+    },
+    [NetworkID.Mumbai]: {
+      bondAddress: "0x0f473784d30f7fFF180B4A41981FD3156aA3074E",
+      reserveAddress: "0xe32e598b931866d54f74211326b939de7fe880fb",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
@@ -88,7 +97,7 @@ export const wftm = new StableBond({
   name: "wftm",
   displayName: "WFTM",
   bondToken: "WFTM",
-  isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true },
+  isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true, [NetworkID.Mumbai]: true },
   bondIconSvg: WFTMImg,
   bondContractABI: BondOhmDaiContract,
   networkAddrs: {
@@ -101,8 +110,12 @@ export const wftm = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x33df735739f888941D8ab97187CB5744286b2494",
+      bondAddress: "0x8fC50bAFE7F83BD7883eed92D8Ca017B416e3D52",
       reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
+    },
+    [NetworkID.Mumbai]: {
+      bondAddress: "0xA888Fd41a3403B52E35F09b863093A804A591207",
+      reserveAddress: "0x9c3c9283d3e44854697cd22d3faa240cfb032889",
     },
     [NetworkID.Fantom]: {
       bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
