@@ -194,7 +194,7 @@ function TreasuryDashboard() {
                   <Chart
                     type="stack"
                     data={data && data.treasuryValue}
-                    dataKey={["value1" /* , "value2", "value3", "value4" */]}
+                    dataKey={["value1", "value2" /*, "value3", "value4" */]}
                     stopColor={[
                       ["#F5AC37", "#EA9276"],
                       ["#768299", "#98B3E9"],

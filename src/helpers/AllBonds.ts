@@ -41,12 +41,12 @@ export const dai = new StableBond({
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
     },
     [NetworkID.Mumbai]: {
-      bondAddress: "0x3ce09e737777C0a93663F344Afe510CB45a27073",
+      bondAddress: "0x33DaafEa4863A44C25A582Cc3Ef0d6e778372088",
       reserveAddress: "0xef45e6E3159e9F302D2B85f6E777791d7B7e98d8",
     },
     [NetworkID.Fantom]: {
-      bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
-      reserveAddress: "0xF284057240eB07117133130e6f8801cCd5Cb95C4",
+      bondAddress: "0x1a817385f48e8554Cf91C60a1Ca5C4e9223F9dA3",
+      reserveAddress: "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e",
     },
     [NetworkID.Local]: {
       bondAddress: "0x3C4bcEC0104038f59CDDe68E4EcC7DCaA6F15af1",
@@ -77,12 +77,12 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xb1afd9f533a2b4778fce9a0a4638e0580e16269b",
     },
     [NetworkID.Mumbai]: {
-      bondAddress: "0x0f473784d30f7fFF180B4A41981FD3156aA3074E",
+      bondAddress: "0x31Fc92151d7E34AE25BBd708ea21F816AB27B4cA",
       reserveAddress: "0xe32e598b931866d54f74211326b939de7fe880fb",
     },
     [NetworkID.Fantom]: {
-      bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
-      reserveAddress: "0xF284057240eB07117133130e6f8801cCd5Cb95C4",
+      bondAddress: "0xA35065dF36d8Ac6a1C80f60EF94201beA0107798",
+      reserveAddress: "0xa25ebf7a042af9898e239f0c5fc92b2230687955",
     },
     [NetworkID.Local]: {
       bondAddress: "0x11aaAb8AfdbAE798a8e76E3bD006e3b2aea1aEBe",
@@ -114,12 +114,12 @@ export const wftm = new StableBond({
       reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
     },
     [NetworkID.Mumbai]: {
-      bondAddress: "0xA888Fd41a3403B52E35F09b863093A804A591207",
+      bondAddress: "0xA477450fFf9f36F977ce3E565Ea2564442009406",
       reserveAddress: "0x9c3c9283d3e44854697cd22d3faa240cfb032889",
     },
     [NetworkID.Fantom]: {
-      bondAddress: "0xDAf72012710c687900baA2e9ACdd78389bfA3be4",
-      reserveAddress: "0xF284057240eB07117133130e6f8801cCd5Cb95C4",
+      bondAddress: "0x2C12F9D468832Cb91e86CF20F00995b099557cEB",
+      reserveAddress: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
     },
     [NetworkID.Local]: {
       bondAddress: "0x11aaAb8AfdbAE798a8e76E3bD006e3b2aea1aEBe",
