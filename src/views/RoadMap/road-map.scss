@@ -17,7 +17,7 @@
 #roadmap-content .MuiCardContent-root{
     padding-bottom: 0px;
 }
-#roadmap-content .MuiGrid-item:nth-child(1) .TimelineBase-cardDecoratorLeft-18, #roadmap-content .MuiGrid-item:nth-child(1) .jss18{
+#roadmap-content .MuiGrid-item:nth-child(1) .TimelineBase-cardDecoratorLeft-18, #roadmap-content .MuiGrid-item:nth-child(1) .jss18, #roadmap-content .MuiGrid-item:nth-child(1) .TimelineBase-cardDecoratorLeft-25{
     border-left: 16px solid #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(1) .MuiCard-root{
@@ -26,7 +26,7 @@
 #roadmap-content .MuiGrid-item:nth-child(1) .MuiCardHeader-subheader {
     color: white;
 }
-#roadmap-content .MuiGrid-item:nth-child(6) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(6) .jss19{
+#roadmap-content .MuiGrid-item:nth-child(6) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(6) .jss19, #roadmap-content .MuiGrid-item:nth-child(6) .TimelineBase-cardDecoratorRight-26{
     border-right: 16px solid #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(6) .MuiCard-root{
@@ -36,7 +36,7 @@
     color: white;
 }
 
-#roadmap-content .MuiGrid-item:nth-child(7) .TimelineBase-cardDecoratorLeft-18, #roadmap-content .MuiGrid-item:nth-child(7) .jss18{
+#roadmap-content .MuiGrid-item:nth-child(7) .TimelineBase-cardDecoratorLeft-18, #roadmap-content .MuiGrid-item:nth-child(7) .jss18, #roadmap-content .MuiGrid-item:nth-child(7) .TimelineBase-cardDecoratorLeft-25{
     border-left: 16px solid #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(7) .MuiCard-root{
@@ -45,12 +45,42 @@
 #roadmap-content .MuiGrid-item:nth-child(7) .MuiCardHeader-subheader {
     color: white;
 }
-#roadmap-content .MuiGrid-item:nth-child(12) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(12) .jss19{
+#roadmap-content .MuiGrid-item:nth-child(12) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(12) .jss19, #roadmap-content .MuiGrid-item:nth-child(12) .TimelineBase-cardDecoratorRight-26{
     border-right: 16px solid #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(12) .MuiCard-root{
     background: #63bd7f;
 }
 #roadmap-content .MuiGrid-item:nth-child(12) .MuiCardHeader-subheader {
+    color: white;
+}
+
+#roadmap-content .MuiGrid-item:nth-child(13) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(13) .jss19, #roadmap-content .MuiGrid-item:nth-child(13) .TimelineBase-cardDecoratorLeft-25{
+    border-left: 16px solid #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(13) .MuiCard-root{
+    background: #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(13) .MuiCardHeader-subheader {
+    color: white;
+}
+
+#roadmap-content .MuiGrid-item:nth-child(18) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(18) .jss19, #roadmap-content .MuiGrid-item:nth-child(18) .TimelineBase-cardDecoratorRight-26{
+    border-right: 16px solid #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(18) .MuiCard-root{
+    background: #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(18) .MuiCardHeader-subheader {
+    color: white;
+}
+
+#roadmap-content .MuiGrid-item:nth-child(19) .TimelineBase-cardDecoratorRight-19, #roadmap-content .MuiGrid-item:nth-child(19) .jss19, #roadmap-content .MuiGrid-item:nth-child(19) .TimelineBase-cardDecoratorLeft-25{
+    border-left: 16px solid #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(19) .MuiCard-root{
+    background: #63bd7f;
+}
+#roadmap-content .MuiGrid-item:nth-child(19) .MuiCardHeader-subheader {
     color: white;
 }

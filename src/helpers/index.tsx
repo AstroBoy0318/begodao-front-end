@@ -11,6 +11,8 @@ import { ReactComponent as SOhmImg } from "../assets/tokens/token_sPIP.svg";
 import { ohm_dai } from "./AllBonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
+import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
+import { NetworkID } from "../lib/Bond";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
@@ -19,7 +21,7 @@ export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
   const reserves = await pairContract.getReserves();
   const token0 = await pairContract.token0();
   let marketPrice = 1;
-  if (token0 === addresses[networkID].DAI_ADDRESS) marketPrice = reserves[0] / reserves[1];
+  if (token0.toLowerCase() === addresses[networkID].DAI_ADDRESS.toLowerCase()) marketPrice = reserves[0] / reserves[1];
   else marketPrice = reserves[1] / reserves[0];
   console.log("marketPrice", marketPrice);
   return marketPrice;
@@ -51,8 +53,14 @@ export function trim(number = 0, precision = 0) {
   return trimmedNumber;
 }
 
-export function getRebaseBlock(currentBlock: number) {
-  return currentBlock + EPOCH_INTERVAL - (currentBlock % EPOCH_INTERVAL);
+export async function getRebaseBlock(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const stakingContract = new ethers.Contract(
+    addresses[networkID].STAKING_ADDRESS as string,
+    OlympusStakingv2,
+    provider,
+  );
+  const epoch = await stakingContract.epoch();
+  return epoch.endBlock;
 }
 
 export function secondsUntilBlock(startBlock: number, endBlock: number) {

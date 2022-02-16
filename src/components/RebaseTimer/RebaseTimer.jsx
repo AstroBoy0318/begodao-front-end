@@ -20,8 +20,8 @@ function RebaseTimer() {
     return state.app.currentBlock;
   });
 
-  function initializeTimer() {
-    const rebaseBlock = getRebaseBlock(currentBlock);
+  async function initializeTimer() {
+    const rebaseBlock = await getRebaseBlock(chainID, provider);
     const seconds = secondsUntilBlock(currentBlock, rebaseBlock);
     setSecondsToRebase(seconds);
     const prettified = prettifySeconds(seconds);
