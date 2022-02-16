@@ -151,7 +151,8 @@ function Stake() {
       .reduce((a, b) => a + b, 0)
       .toFixed(4),
   );
-  const trimmedStakingAPY = trim(stakingAPY * 100, 1);
+  const trimmedStakingAPY =
+    stakingAPY > 999999999 ? "∞" : new Intl.NumberFormat("en-US").format(trim(stakingAPY * 100, 1));
   const stakingRebasePercentage = trim(stakingRebase * 100, 4);
   const nextRewardValue = trim((stakingRebasePercentage / 100) * trimmedBalance, 4);
 
@@ -189,11 +190,7 @@ function Stake() {
                         APY
                       </Typography>
                       <Typography variant="h4">
-                        {stakingAPY ? (
-                          <>{new Intl.NumberFormat("en-US").format(trimmedStakingAPY)}%</>
-                        ) : (
-                          <Skeleton width="150px" />
-                        )}
+                        {stakingAPY ? <>{trimmedStakingAPY}%</> : <Skeleton width="150px" />}
                       </Typography>
                     </div>
                   </Grid>
