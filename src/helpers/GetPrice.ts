@@ -7,15 +7,19 @@ import { ethers } from "ethers";
 import { addresses } from "../constants";
 
 async function getFTMPrice() {
-  const resp = await fetch("https://api.binance.com/api/v3/avgPrice?symbol=FTMUSDT", { method: "GET" });
-  let data = await resp.json();
-  return data.price;
+  try {
+    const resp = await fetch("https://api.binance.com/api/v3/avgPrice?symbol=FTMUSDT", { method: "GET" });
+    let data = await resp.json();
+    return data.price;
+  } catch (ex) {
+    return 0;
+  }
 }
 
 export async function getTokenPrice(networkID: NetworkID, provider: StaticJsonRpcProvider, tokenAddress: string) {
   const ftmPrice = await getFTMPrice();
   if (tokenAddress === addresses[networkID].DAI_ADDRESS) return 1;
-  if (tokenAddress === addresses[networkID].WFTM_ADDRESS) return Number(ftmPrice);
+  if (tokenAddress === addresses[networkID].WFTM_ADDRESS && ftmPrice > 0) return Number(ftmPrice);
   const factoryContract = new ethers.Contract(addresses[networkID].FACTORY_ADDRESS as string, factory, provider);
   const wftmContract = new ethers.Contract(addresses[networkID].WFTM_ADDRESS as string, erc20, provider);
   const daiContract = new ethers.Contract(addresses[networkID].DAI_ADDRESS as string, erc20, provider);
@@ -34,7 +38,7 @@ export async function getTokenPrice(networkID: NetworkID, provider: StaticJsonRp
     const tokenBal = await tokenContract.balanceOf(pair1);
     const daiBalance = Number(ethers.utils.formatEther(daimBal.toString()));
     const tokenBalance = Number(ethers.utils.formatUnits(tokenBal.toString(), tokenDecimals));
-    return tokenBalance / daiBalance;
+    return daiBalance / tokenBalance;
   }
 }
 

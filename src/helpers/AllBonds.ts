@@ -247,7 +247,7 @@ export const wftm_1 = new StableBond({
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
 // Add new bonds to this array!!
-export const allBonds = [dai, dai_1, ohm_dai, ohm_dai_1, wftm, wftm_1]; //, eth, ohm_dai, ohm_frax, lusd, ohm_lusd, ohm_weth
+export const allBonds = [dai_1, wftm_1, ohm_dai_1, dai, ohm_dai, wftm]; //, eth, ohm_dai, ohm_frax, lusd, ohm_lusd, ohm_weth
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
 }, {});

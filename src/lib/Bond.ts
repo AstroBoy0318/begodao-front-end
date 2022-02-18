@@ -5,6 +5,7 @@ import { abi as ierc20Abi } from "src/abi/IERC20.json";
 import { getBondCalculator } from "src/helpers/BondCalculator";
 import { addresses } from "src/constants";
 import React, { ReactNode } from "react";
+import { getTokenPrice } from "../helpers/GetPrice";
 
 export enum NetworkID {
   Mainnet = 1,
@@ -157,8 +158,11 @@ export class StableBond extends Bond {
 
   async getTreasuryBalance(networkID: NetworkID, provider: StaticJsonRpcProvider) {
     let token = this.getContractForReserve(networkID, provider);
+    let tokenPrice = 1;
+    if (this.getAddressForReserve(networkID).toLowerCase() !== addresses[networkID].DAI_ADDRESS.toLowerCase())
+      tokenPrice = await getTokenPrice(networkID, provider, this.getAddressForReserve(networkID));
     let tokenAmount = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    return tokenAmount / Math.pow(10, 18);
+    return (tokenAmount / Math.pow(10, 18)) * tokenPrice;
   }
 }
 

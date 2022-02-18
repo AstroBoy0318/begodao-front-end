@@ -22,6 +22,8 @@ import { Skeleton } from "@material-ui/lab";
 import ClaimBonds from "./ClaimBonds";
 import _ from "lodash";
 import { allBondsMap } from "src/helpers/AllBonds";
+import { useWeb3Context } from "../../hooks";
+import { allBonds } from "../../helpers/AllBonds";
 
 function ChooseBond() {
   const { bonds } = useBonds();
@@ -30,6 +32,8 @@ function ChooseBond() {
 
   const isAppLoading = useSelector(state => state.app.loading);
   const isAccountLoading = useSelector(state => state.account.loading);
+
+  const { chainID } = useWeb3Context();
 
   const accountBonds = useSelector(state => {
     const withInterestDue = [];
@@ -48,8 +52,9 @@ function ChooseBond() {
   const treasuryBalance = useSelector(state => {
     if (state.bonding.loading == false) {
       let tokenBalances = 0;
-      for (const bond in allBondsMap) {
-        if (state.bonding[bond]) {
+      for (let i = 0; i < allBonds.length; i++) {
+        const bond = allBonds[i].name;
+        if (state.bonding[bond] && allBonds[i].isAvailable[chainID]) {
           tokenBalances += state.bonding[bond].purchased;
         }
       }

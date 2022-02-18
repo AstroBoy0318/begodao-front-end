@@ -42,17 +42,17 @@ export const loadAppDetails = createAsyncThunk(
     let treasuryMarketValue = 0;
     let currentTreasuryValue: ITreasuryValue = { timestamp: new Date().getTime() / 1000 };
     for (let i = 0; i < allBonds.length; i++) {
+      if (!allBonds[i]["isAvailable"][networkID] || allBonds[i].name.indexOf("_lp") >= 0) continue;
       const tokenContract = new ethers.Contract(
         allBonds[i]["networkAddrs"][networkID].reserveAddress as string,
         ERC20,
         provider,
       );
-      console.log(tokenContract);
       let treasuryBalance = await tokenContract.balanceOf(addresses[networkID].TREASURY_ADDRESS as string);
       const daiDecimals = await tokenContract.decimals();
       treasuryBalance = ethers.utils.formatUnits(treasuryBalance, daiDecimals);
       let tokenPrice = 0;
-      if (allBonds[i].name.endsWith("lp")) {
+      if (allBonds[i].name.indexOf("_lp") >= 0) {
         tokenPrice = await getLPTokenPrice(networkID, provider, allBonds[i]["networkAddrs"][networkID].reserveAddress);
       } else {
         tokenPrice = await getTokenPrice(networkID, provider, allBonds[i]["networkAddrs"][networkID].reserveAddress);
