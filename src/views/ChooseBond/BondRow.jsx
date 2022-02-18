@@ -121,7 +121,7 @@ export function BondTableData({ bond }) {
       </TableCell>
       <TableCell align="left">{isBondLoading ? <Skeleton /> : `${trim(bond.bondDiscount * 100, 2)}%`}</TableCell>
       <TableCell align="right">
-        {isBondLoading ? (
+        {isBondLoading || !bond.isAvailable[chainID] ? (
           <Skeleton />
         ) : (
           new Intl.NumberFormat("en-US", {
