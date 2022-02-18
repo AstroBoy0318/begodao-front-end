@@ -187,7 +187,12 @@ function NavContent() {
               <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
                   {bonds.map((bond, i) => (
-                    <Link component={NavLink} to={`/bonds/${bond.name}`} key={i} className={"bond"}>
+                    <Link
+                      component={NavLink}
+                      to={`/bonds/${bond.name}`}
+                      key={i}
+                      className={`bond ${bond.isAvailable[chainID] ? "" : "sold-out-bond"}`}
+                    >
                       {/*{!bond.bondDiscount ? (
                         <Skeleton variant="text" width={"150px"} />
                       ) : (

@@ -173,3 +173,7 @@
 .rotate-x-180 {
   transform: rotateX(180deg);
 }
+
+.sold-out-bond * {
+  text-decoration: line-through;
+}
