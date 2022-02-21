@@ -144,10 +144,10 @@ export const changeStake = createAsyncThunk(
         uaData.type = "unstake";
         stakeTx = await staking.unstake(ethers.utils.parseUnits(value, "gwei"), true);
       } else {
-        uaData.type = "claim";
+        uaData.type = "unlocking";
         stakeTx = await staking.claim(address);
       }
-      const pendingTxnType = action === "stake" ? "staking" : "unstaking";
+      const pendingTxnType = action === "stake" ? "staking" : action === "unstake" ? "unstaking" : "unlocking";
       uaData.txHash = stakeTx.hash;
       dispatch(fetchPendingTxns({ txnHash: stakeTx.hash, text: getStakingTypeText(action), type: pendingTxnType }));
       await stakeTx.wait();

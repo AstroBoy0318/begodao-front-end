@@ -121,7 +121,7 @@ function Stake() {
 
   const onChangeStake = async action => {
     // eslint-disable-next-line no-restricted-globals
-    if (action !== "claim") {
+    if (action !== "unlocking") {
       if (isNaN(quantity) || quantity === 0 || quantity === "") {
         // eslint-disable-next-line no-alert
         return dispatch(error("Please enter a value!"));
@@ -270,25 +270,25 @@ function Stake() {
                 <>
                   <Box className="stake-action-area" marginTop={0}>
                     {warmupEndDate && (
-                      <>
-                        <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>
-                          <Typography> You can't claim until {warmupEndDate}.</Typography>
-                        </Box>
-                        <Box className="stake-action-area" display="flex" alignItems="center" marginTop={1}>
-                          <Button
-                            className="claim-button"
-                            variant="outlined"
-                            size="small"
-                            color="primary"
-                            disabled={isPendingTxn(pendingTransactions, "Unlocking")}
-                            onClick={() => {
-                              onChangeStake("claim");
-                            }}
-                          >
-                            {txnButtonText(pendingTransactions, "Unlocking", "Unblock Rewards")}
-                          </Button>
-                        </Box>
-                      </>
+                      <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>
+                        <Typography> You can't claim until {warmupEndDate}.</Typography>
+                      </Box>
+                    )}
+                    {!warmupEndDate && !isAppLoading && (
+                      <Box className="stake-action-area" display="flex" alignItems="center" marginTop={1}>
+                        <Button
+                          className="claim-button"
+                          variant="outlined"
+                          size="small"
+                          color="primary"
+                          disabled={isPendingTxn(pendingTransactions, "unlocking")}
+                          onClick={() => {
+                            onChangeStake("unlocking");
+                          }}
+                        >
+                          {txnButtonText(pendingTransactions, "unlocking", "Unblock Rewards")}
+                        </Button>
+                      </Box>
                     )}
                     <Tabs
                       key={String(zoomed)}
