@@ -12,7 +12,9 @@ import { ohm_dai } from "./AllBonds";
 import { JsonRpcSigner, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { IBaseAsyncThunk } from "src/slices/interfaces";
 import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
+import { abi as sBego } from "../abi/sOhmv2.json";
 import { NetworkID } from "../lib/Bond";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
@@ -61,6 +63,47 @@ export async function getRebaseBlock(networkID: NetworkID, provider: StaticJsonR
   );
   const epoch = await stakingContract.epoch();
   return epoch.endBlock;
+}
+
+export async function getWarmupDate(
+  networkID: NetworkID,
+  provider: StaticJsonRpcProvider,
+  address: string,
+  currentBlock: number,
+) {
+  if (!address || !provider) return "";
+  const stakingContract = new ethers.Contract(
+    addresses[networkID].STAKING_ADDRESS as string,
+    OlympusStakingv2,
+    provider,
+  );
+  const warmupInfo = await stakingContract.warmupInfo(address);
+  if (warmupInfo.expiry === 0) return "";
+  const epoch = await stakingContract.epoch();
+  if (warmupInfo.expiry < epoch.number) return "";
+  const warmupEndBlock = epoch.endBlock + (warmupInfo.expiry - epoch.number) * epoch.length;
+  if (warmupEndBlock < currentBlock) return "";
+  let warmupEndDate = new Date(new Date().getTime() + secondsUntilBlock(currentBlock, warmupEndBlock));
+  return warmupEndDate.toLocaleString();
+}
+
+export async function getWarmupDeposit(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
+  if (!address || !provider) return "";
+  const stakingContract = new ethers.Contract(
+    addresses[networkID].STAKING_ADDRESS as string,
+    OlympusStakingv2,
+    provider,
+  );
+  const info = await stakingContract.warmupInfo(address);
+  const deposit = Number(ethers.utils.formatUnits(info.deposit, 9));
+  const reward = await getBalanceForGons(networkID, provider, info.gons.toString());
+  return { deposit: deposit, reward: reward };
+}
+
+export async function getBalanceForGons(networkID: NetworkID, provider: StaticJsonRpcProvider, val: string) {
+  const sBegoContract = new ethers.Contract(addresses[networkID].SBEGO_ADDRESS as string, sBego, provider);
+  const bal = await sBegoContract.balanceForGons(val);
+  return Number(ethers.utils.formatUnits(bal, 9));
 }
 
 export function secondsUntilBlock(startBlock: number, endBlock: number) {

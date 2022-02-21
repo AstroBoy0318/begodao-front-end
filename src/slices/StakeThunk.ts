@@ -134,10 +134,18 @@ export const changeStake = createAsyncThunk(
     try {
       if (action === "stake") {
         uaData.type = "stake";
+        const warmupPeriod = await staking.warmupPeriod();
+        if (warmupPeriod > 0) {
+          const shouldProceed = window.confirm(`Your rewards will be locked for ${warmupPeriod} epoch, are you sure?`);
+          if (!shouldProceed) return;
+        }
         stakeTx = await stakingHelper.stake(ethers.utils.parseUnits(value, "gwei"));
-      } else {
+      } else if (action === "unstake") {
         uaData.type = "unstake";
         stakeTx = await staking.unstake(ethers.utils.parseUnits(value, "gwei"), true);
+      } else {
+        uaData.type = "claim";
+        stakeTx = await staking.claim(address);
       }
       const pendingTxnType = action === "stake" ? "staking" : "unstaking";
       uaData.txHash = stakeTx.hash;

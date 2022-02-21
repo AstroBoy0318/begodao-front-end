@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Box,
@@ -18,14 +18,12 @@ import {
 import NewReleases from "@material-ui/icons/NewReleases";
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
 import TabPanel from "../../components/TabPanel";
-import { getOhmTokenImage, getTokenImage, trim } from "../../helpers";
+import { getOhmTokenImage, getTokenImage, getWarmupDate, trim, getWarmupDeposit } from "../../helpers";
 import { changeApproval, changeStake } from "../../slices/StakeThunk";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
 import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
-import ExternalStakePool from "./ExternalStakePool";
 import { error } from "../../slices/MessagesSlice";
 import { ethers } from "ethers";
 
@@ -89,6 +87,26 @@ function Stake() {
     return state.pendingTransactions;
   });
 
+  const currentBlock = useSelector(state => {
+    return state.app.currentBlock;
+  });
+
+  const [warmupEndDate, setWarmupEndDate] = useState("");
+  const [warmupDeposit, setWarmupDeposit] = useState(0);
+  const [warmupReward, setWarmupReward] = useState(0);
+
+  useEffect(() => {
+    if (currentBlock) {
+      getWarmupDate(chainID, provider, address, currentBlock).then(re => {
+        setWarmupEndDate(re);
+      });
+      getWarmupDeposit(chainID, provider, address).then(re => {
+        setWarmupDeposit(re.deposit);
+        setWarmupReward(re.reward);
+      });
+    }
+  }, [connected, provider, chainID, address, currentBlock]);
+
   const setMax = () => {
     if (view === 0) {
       setQuantity(pipBalance);
@@ -103,19 +121,21 @@ function Stake() {
 
   const onChangeStake = async action => {
     // eslint-disable-next-line no-restricted-globals
-    if (isNaN(quantity) || quantity === 0 || quantity === "") {
-      // eslint-disable-next-line no-alert
-      return dispatch(error("Please enter a value!"));
-    }
+    if (action !== "claim") {
+      if (isNaN(quantity) || quantity === 0 || quantity === "") {
+        // eslint-disable-next-line no-alert
+        return dispatch(error("Please enter a value!"));
+      }
 
-    // 1st catch if quantity > balance
-    let gweiValue = ethers.utils.parseUnits(quantity, "gwei");
-    if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(pipBalance, "gwei"))) {
-      return dispatch(error("You cannot stake more than your BEGO balance."));
-    }
+      // 1st catch if quantity > balance
+      let gweiValue = ethers.utils.parseUnits(quantity, "gwei");
+      if (action === "stake" && gweiValue.gt(ethers.utils.parseUnits(pipBalance, "gwei"))) {
+        return dispatch(error("You cannot stake more than your BEGO balance."));
+      }
 
-    if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sPIPBalance, "gwei"))) {
-      return dispatch(error("You cannot unstake more than your sBEGO balance."));
+      if (action === "unstake" && gweiValue.gt(ethers.utils.parseUnits(sPIPBalance, "gwei"))) {
+        return dispatch(error("You cannot unstake more than your sBEGO balance."));
+      }
     }
 
     await dispatch(changeStake({ address, action, value: quantity.toString(), provider, networkID: chainID }));
@@ -153,6 +173,8 @@ function Stake() {
   );
   const formatWithString = num => {
     let re = "";
+    if (num > 1000000000000000) return "∞";
+    if (num > 1000000000000) return `${(num / 1000000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}T`;
     if (num > 1000000000) return `${(num / 1000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}B`;
     if (num > 1000000) return `${(num / 1000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}M`;
   };
@@ -236,7 +258,7 @@ function Stake() {
               </div>
             </Grid>
 
-            <div className="staking-area">
+            <div className="staking-area" style={{ marginTop: 0 }}>
               {!address ? (
                 <div className="stake-wallet-notification">
                   <div className="wallet-menu" id="wallet-menu">
@@ -246,7 +268,28 @@ function Stake() {
                 </div>
               ) : (
                 <>
-                  <Box className="stake-action-area">
+                  <Box className="stake-action-area" marginTop={0}>
+                    {warmupEndDate && (
+                      <>
+                        <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>
+                          <Typography> You can't claim until {warmupEndDate}.</Typography>
+                        </Box>
+                        <Box className="stake-action-area" display="flex" alignItems="center" marginTop={1}>
+                          <Button
+                            className="claim-button"
+                            variant="outlined"
+                            size="small"
+                            color="primary"
+                            disabled={isPendingTxn(pendingTransactions, "Unlocking")}
+                            onClick={() => {
+                              onChangeStake("claim");
+                            }}
+                          >
+                            {txnButtonText(pendingTransactions, "Unlocking", "Unblock Rewards")}
+                          </Button>
+                        </Box>
+                      </>
+                    )}
                     <Tabs
                       key={String(zoomed)}
                       centered
@@ -374,7 +417,22 @@ function Stake() {
                         {isAppLoading ? <Skeleton width="80px" /> : <>{trim(pipBalance, 4)} BEGO</>}
                       </Typography>
                     </div>
-
+                    {warmupEndDate && (
+                      <div className="data-row">
+                        <Typography variant="body1">Your Warmup Balance</Typography>
+                        <Typography variant="body1">
+                          {isAppLoading ? <Skeleton width="80px" /> : <>{trim(warmupDeposit, 4)} BEGO</>}
+                        </Typography>
+                      </div>
+                    )}
+                    {warmupEndDate && (
+                      <div className="data-row">
+                        <Typography variant="body1">Your Warmup Reward</Typography>
+                        <Typography variant="body1">
+                          {isAppLoading ? <Skeleton width="80px" /> : <>{trim(warmupReward, 4)} sBEGO</>}
+                        </Typography>
+                      </div>
+                    )}
                     <div className="data-row">
                       <Typography variant="body1">Your Staked Balance</Typography>
                       <Typography variant="body1">
