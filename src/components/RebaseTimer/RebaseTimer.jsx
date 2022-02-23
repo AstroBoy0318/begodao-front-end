@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { getRebaseBlock, secondsUntilBlock, prettifySeconds } from "../../helpers";
+import { getRebaseBlock, secondsUntilBlock, prettifySeconds, getNextEpochBlock } from "../../helpers";
 import { Box, Typography } from "@material-ui/core";
 import "./rebasetimer.scss";
 import { Skeleton } from "@material-ui/lab";
@@ -15,6 +15,7 @@ function RebaseTimer() {
   const [secondsToRebase, setSecondsToRebase] = useState(0);
   const [rebaseString, setRebaseString] = useState("");
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
+  const [nextEpochBlock, setNextEpochBlock] = useState("");
 
   const currentBlock = useSelector(state => {
     return state.app.currentBlock;
@@ -26,6 +27,7 @@ function RebaseTimer() {
     setSecondsToRebase(seconds);
     const prettified = prettifySeconds(seconds);
     setRebaseString(prettified !== "" ? prettified : "Less than a minute");
+    setNextEpochBlock(await getNextEpochBlock(chainID, provider));
   }
 
   // This initializes secondsToRebase as soon as currentBlock becomes available
@@ -68,7 +70,10 @@ function RebaseTimer() {
         {currentBlock ? (
           secondsToRebase > 0 ? (
             <>
-              <strong>{rebaseString}</strong> to next rebase
+              <a target="_blank" href={`https://ftmscan.com/block/${nextEpochBlock}`} class="block-link">
+                <strong>{rebaseString}</strong>
+              </a>{" "}
+              to next rebase
             </>
           ) : (
             <strong>Rebasing Now</strong>

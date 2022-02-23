@@ -18,7 +18,7 @@ import {
 import NewReleases from "@material-ui/icons/NewReleases";
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
 import TabPanel from "../../components/TabPanel";
-import { getOhmTokenImage, getTokenImage, getWarmupDate, trim, getWarmupDeposit } from "../../helpers";
+import { getOhmTokenImage, getTokenImage, getWarmupDate, trim, getWarmupDeposit, getWarmupRebase } from "../../helpers";
 import { changeApproval, changeStake } from "../../slices/StakeThunk";
 import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
@@ -94,11 +94,15 @@ function Stake() {
   const [warmupEndDate, setWarmupEndDate] = useState("");
   const [warmupDeposit, setWarmupDeposit] = useState(0);
   const [warmupReward, setWarmupReward] = useState(0);
+  const [warmupRebase, setWarmupRebase] = useState(0);
 
   useEffect(() => {
     if (currentBlock) {
       getWarmupDate(chainID, provider, address, currentBlock).then(re => {
         setWarmupEndDate(re);
+      });
+      getWarmupRebase(chainID, provider, address).then(re => {
+        setWarmupRebase(re);
       });
       getWarmupDeposit(chainID, provider, address).then(re => {
         setWarmupDeposit(re.deposit);
@@ -269,12 +273,17 @@ function Stake() {
               ) : (
                 <>
                   <Box className="stake-action-area" marginTop={0}>
-                    {warmupEndDate && (
+                    {/*{warmupEndDate && (*/}
+                    {/*  <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>*/}
+                    {/*    <Typography> You can't claim until {warmupEndDate}.</Typography>*/}
+                    {/*  </Box>*/}
+                    {/*)}*/}
+                    {warmupRebase > 0 && (
                       <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>
-                        <Typography> You can't claim until {warmupEndDate}.</Typography>
+                        <Typography> You can't claim until {warmupRebase} rebase.</Typography>
                       </Box>
                     )}
-                    {!warmupEndDate && !isAppLoading && (
+                    {warmupRebase <= 0 && !isAppLoading && warmupReward > 0 && (
                       <Box className="stake-action-area" display="flex" alignItems="center" marginTop={1}>
                         <Button
                           className="claim-button"

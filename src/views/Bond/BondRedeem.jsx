@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Button, Typography, Box, Slide } from "@material-ui/core";
 import { redeemBond } from "../../slices/BondSlice";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { trim, secondsUntilBlock, prettifySeconds, prettyVestingPeriod } from "../../helpers";
+import { trim, secondsUntilBlockBonds, prettifySeconds, prettyVestingPeriod } from "../../helpers";
 import { isPendingTxn, txnButtonText } from "src/slices/PendingTxnsSlice";
 import { Skeleton } from "@material-ui/lab";
 
@@ -37,7 +37,7 @@ function BondRedeem({ bond }) {
 
   const vestingPeriod = () => {
     const vestingBlock = parseInt(currentBlock) + parseInt(bondingState.vestingTerm);
-    const seconds = secondsUntilBlock(currentBlock, vestingBlock);
+    const seconds = secondsUntilBlockBonds(currentBlock, vestingBlock);
     return prettifySeconds(seconds, "day");
   };
 

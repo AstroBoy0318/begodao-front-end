@@ -1,4 +1,4 @@
-import { EPOCH_INTERVAL, BLOCK_RATE_SECONDS, addresses } from "../constants";
+import { EPOCH_INTERVAL, BLOCK_RATE_SECONDS, addresses, BLOCK_RATE_SECONDS_BONDS } from "../constants";
 import { ethers } from "ethers";
 import axios from "axios";
 import { abi as PairContract } from "../abi/PairContract.json";
@@ -14,7 +14,7 @@ import { IBaseAsyncThunk } from "src/slices/interfaces";
 import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
 import { abi as sBego } from "../abi/sOhmv2.json";
 import { NetworkID } from "../lib/Bond";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { abi as DistributorAbi } from "../abi/DistributorContract.json";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice({ networkID, provider }: IBaseAsyncThunk) {
@@ -65,6 +65,18 @@ export async function getRebaseBlock(networkID: NetworkID, provider: StaticJsonR
   return epoch.endBlock;
 }
 
+export async function getWarmupRebase(networkID: NetworkID, provider: StaticJsonRpcProvider, address: string) {
+  if (!address || !provider) return "";
+  const stakingContract = new ethers.Contract(
+    addresses[networkID].STAKING_ADDRESS as string,
+    OlympusStakingv2,
+    provider,
+  );
+  const info = await stakingContract.warmupInfo(address);
+  const epoch = await stakingContract.epoch();
+  return info.expiry - epoch.number;
+}
+
 export async function getWarmupDate(
   networkID: NetworkID,
   provider: StaticJsonRpcProvider,
@@ -113,12 +125,19 @@ export function secondsUntilBlock(startBlock: number, endBlock: number) {
   return secondsAway;
 }
 
+export function secondsUntilBlockBonds(startBlock: number, endBlock: number) {
+  const blocksAway = endBlock - startBlock;
+  const secondsAway = blocksAway * BLOCK_RATE_SECONDS_BONDS;
+
+  return secondsAway;
+}
+
 export function prettyVestingPeriod(currentBlock: number, vestingBlock: number) {
   if (vestingBlock === 0) {
     return "";
   }
 
-  const seconds = secondsUntilBlock(currentBlock, vestingBlock);
+  const seconds = secondsUntilBlockBonds(currentBlock, vestingBlock);
   if (seconds < 0) {
     return "Fully Vested";
   }
@@ -186,6 +205,16 @@ export function contractForRedeemHelper({
   provider: StaticJsonRpcProvider | JsonRpcSigner;
 }) {
   return new ethers.Contract(addresses[networkID].REDEEM_HELPER_ADDRESS as string, RedeemHelperAbi, provider);
+}
+
+export async function getNextEpochBlock(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const distributorContract = new ethers.Contract(
+    addresses[networkID].DISTRIBUTOR_ADDRESS as string,
+    DistributorAbi,
+    provider,
+  );
+  const nextEpochBlock = await distributorContract.nextEpochBlock();
+  return nextEpochBlock;
 }
 
 /**
