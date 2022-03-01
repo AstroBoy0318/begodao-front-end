@@ -37,8 +37,8 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.FantomTestnet]: {
-      bondAddress: "0x452B9e16f5dE21372B9a83CFC1Cf080FACa06D67",
-      reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
+      bondAddress: "0x4179F89782B95fBD45328E3935DdEFb437657FC9",
+      reserveAddress: "0xfdd98d5Bd2E6de01d45E356B8702F14AF9D2a7D4",
     },
     [NetworkID.Mumbai]: {
       bondAddress: "0x33DaafEa4863A44C25A582Cc3Ef0d6e778372088",
@@ -57,12 +57,12 @@ export const dai = new StableBond({
 
 export const dai_1 = new StableBond({
   name: "dai_1",
-  displayName: "DAI v2",
+  displayName: "DAI",
   bondToken: "DAI",
   isAvailable: {
     [NetworkID.Mainnet]: true,
     [NetworkID.Testnet]: true,
-    [NetworkID.FantomTestnet]: true,
+    [NetworkID.FantomTestnet]: false,
     [NetworkID.Fantom]: true,
     [NetworkID.Mumbai]: true,
     [NetworkID.Local]: true,
@@ -131,13 +131,12 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0xf2F47d88A26592E8ccdB2144D34bA9CBf98Be0aD",
     },
   },
-  lpUrl:
-    "https://app.sushi.com/add/0x383518188c0c6d7730d91b2c03a03c837814a899/0x6b175474e89094c44da98b954eedeac495271d0f",
+  lpUrl: "https://spookyswap.finance/add/0xe961c722515657c375fb0d504953041876c34e94",
 });
 
 export const ohm_dai_1 = new LPBond({
   name: "bego_dai_lp_1",
-  displayName: "BEGO - DAI LP v2",
+  displayName: "BEGO - DAI LP",
   bondToken: "DAI",
   isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true, [NetworkID.Mumbai]: true },
   bondIconSvg: OhmDaiImg,
@@ -169,8 +168,7 @@ export const ohm_dai_1 = new LPBond({
       reserveAddress: "0xf2F47d88A26592E8ccdB2144D34bA9CBf98Be0aD",
     },
   },
-  lpUrl:
-    "https://app.sushi.com/add/0x383518188c0c6d7730d91b2c03a03c837814a899/0x6b175474e89094c44da98b954eedeac495271d0f",
+  lpUrl: "https://spookyswap.finance/add/0xe961c722515657c375fb0d504953041876c34e94",
 });
 
 export const wftm = new StableBond({
@@ -210,7 +208,7 @@ export const wftm = new StableBond({
 
 export const wftm_1 = new StableBond({
   name: "wftm_1",
-  displayName: "WFTM v2",
+  displayName: "WFTM",
   bondToken: "WFTM",
   isAvailable: { [NetworkID.FantomTestnet]: true, [NetworkID.Fantom]: true, [NetworkID.Mumbai]: true },
   bondIconSvg: WFTMImg,

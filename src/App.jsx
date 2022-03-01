@@ -31,6 +31,7 @@ import { girth as gTheme } from "./themes/girth.js";
 import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { OrderContextProvider } from "./context/OrderContext";
+import Farms from "./views/Farms/Farms";
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -236,8 +237,12 @@ function App() {
                 <Stake />
               </Route>
 
-              <Route path="/nft">
+              <Route path="/nfts">
                 <Nft />
+              </Route>
+
+              <Route path="/farms">
+                <Farms />
               </Route>
 
               {/*

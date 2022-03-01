@@ -9,6 +9,7 @@ import { ReactComponent as PresaleIcon } from "../../assets/icons/presale.svg";
 import { ReactComponent as RoadMapIcon } from "../../assets/icons/road-map.svg";
 import { ReactComponent as NFTIcon } from "../../assets/icons/nft-icon.svg";
 import { ReactComponent as UpArrow } from "../../assets/icons/up-arrow.svg";
+import { ReactComponent as FarmIcon } from "../../assets/icons/farm-tractor.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
@@ -46,6 +47,9 @@ function NavContent() {
       return true;
     }
     if ((currentPath.indexOf("bonds") >= 0 || currentPath.indexOf("choose_bond") >= 0) && page === "bonds") {
+      return true;
+    }
+    if (currentPath.indexOf("farms") >= 0 && page === "farms") {
       return true;
     }
     return false;
@@ -134,8 +138,23 @@ function NavContent() {
 
               <Link
                 component={NavLink}
+                id="farms-nav"
+                to="/farms"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "farms");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={FarmIcon} viewBox="0 0 122.88 95.45" />
+                  Farms
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
                 id="nft-nav"
-                to="/nft"
+                to="/nfts"
                 isActive={(match, location) => {
                   return checkPage(match, location, "nft");
                 }}
@@ -143,7 +162,7 @@ function NavContent() {
               >
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={NFTIcon} viewBox="0 0 29 28" />
-                  NFT
+                  NFTS
                 </Typography>
               </Link>
 
@@ -186,6 +205,7 @@ function NavContent() {
 
               <div className="dapp-menu-data discounts">
                 <div className="bond-discounts">
+                  {/*<Typography variant="body2">Open Bonds</Typography>*/}
                   {bonds.map((bond, i) => (
                     <Link
                       component={NavLink}

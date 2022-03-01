@@ -7,7 +7,7 @@ import { SvgIcon } from "@material-ui/core";
 const externalUrls = [
   {
     title: "Governance",
-    url: "",
+    url: "https://snapshot.org/#/begodao.eth",
     icon: <SvgIcon color="primary" component={GovIcon} />,
   },
   {

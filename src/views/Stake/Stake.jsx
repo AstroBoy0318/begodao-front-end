@@ -280,7 +280,7 @@ function Stake() {
                     {/*)}*/}
                     {warmupRebase > 0 && (
                       <Box className="stake-action-area" display="flex" alignItems="center" marginTop={0}>
-                        <Typography> You can't claim until {warmupRebase} rebase.</Typography>
+                        <Typography>* You can't claim until after {warmupRebase} rebase(s) *</Typography>
                       </Box>
                     )}
                     {warmupRebase <= 0 && !isAppLoading && warmupReward > 0 && (

@@ -136,7 +136,7 @@ export const changeStake = createAsyncThunk(
         uaData.type = "stake";
         const warmupPeriod = await staking.warmupPeriod();
         if (warmupPeriod > 0) {
-          const shouldProceed = window.confirm(`Your rewards will be locked for ${warmupPeriod} epoch, are you sure?`);
+          const shouldProceed = window.confirm(`Your Balance & Rewards will be locked for ${warmupPeriod} rebases`);
           if (!shouldProceed) return;
         }
         stakeTx = await stakingHelper.stake(ethers.utils.parseUnits(value, "gwei"));

@@ -14,15 +14,26 @@ import {
   TableRow,
   TableContainer,
   Zoom,
+  Tab,
+  Tabs,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import BondLogo from "../../components/BondLogo";
-import { ReactComponent as OhmLusdImg } from "src/assets/tokens/PIP-LUSD.svg";
+import { ReactComponent as OhmLusdImg } from "src/assets/tokens/BEGO-DAI.svg";
+import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { trim } from "../../helpers";
+import TabPanel from "../../components/TabPanel";
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
 
 export default function ExternalStakePool() {
   const dispatch = useDispatch();
@@ -30,10 +41,17 @@ export default function ExternalStakePool() {
   const [walletChecked, setWalletChecked] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width: 705px)");
   const isMobileScreen = useMediaQuery("(max-width: 513px)");
+  const [view, setView] = useState(0);
+  const [zoomed, setZoomed] = useState(false);
 
   const ohmLusdReserveBalance = useSelector(state => {
     return state.account && state.account.bonds?.ohm_lusd_lp?.balance;
   });
+
+  const stakeHandler = () => {};
+  const changeView = (event, newView) => {
+    setView(newView);
+  };
 
   useEffect(() => {
     if (hasCachedProvider()) {
@@ -58,11 +76,21 @@ export default function ExternalStakePool() {
   return (
     <Zoom in={true}>
       <Paper className={`ohm-card secondary ${isSmallScreen && "mobile"}`}>
-        <div className="card-header">
-          <Typography variant="h5">Farm Pool</Typography>
-        </div>
         <div className="card-content">
-          {!isSmallScreen ? (
+          <Tabs
+            key={String(zoomed)}
+            centered
+            value={view}
+            textColor="primary"
+            indicatorColor="primary"
+            className="stake-tab-buttons"
+            onChange={changeView}
+            aria-label="stake tabs"
+          >
+            <Tab label="Farms" {...a11yProps(0)} />
+            <Tab label="Pools" {...a11yProps(1)} />
+          </Tabs>
+          <TabPanel value={view} index={0} className="stake-tab-panel">
             <TableContainer className="stake-table">
               <Table>
                 <TableHead>
@@ -70,6 +98,7 @@ export default function ExternalStakePool() {
                     <TableCell>Asset</TableCell>
                     <TableCell align="left">APY</TableCell>
                     <TableCell align="left">TVD</TableCell>
+                    <TableCell align="left">Deposit Fee</TableCell>
                     <TableCell align="left">Balance</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
@@ -80,11 +109,11 @@ export default function ExternalStakePool() {
                     <TableCell>
                       <Box className="ohm-pairs">
                         <BondLogo bond={{ bondIconSvg: OhmLusdImg, isLP: true }}></BondLogo>
-                        <Typography>OHM-DAI</Typography>
+                        <Typography>BEGO-DAI</Typography>
                       </Box>
                     </TableCell>
                     <TableCell align="left">
-                      "Coming Soon"
+                      235%
                       {/*{isLusdLoading ? (
                         <Skeleton width="80px" />
                       ) : lusdData.apy === 0 ? (
@@ -110,58 +139,93 @@ export default function ExternalStakePool() {
                       0
                       {/*{isLusdLoading ? <Skeleton width="80px" /> : (trim(ohmLusdReserveBalance, 2) || 0) + " SLP"}*/}
                     </TableCell>
+                    <TableCell align="left">4%</TableCell>
                     <TableCell align="center">
-                      <Button
-                        variant="outlined"
-                        color="secondary"
-                        // href="https://crucible.alchemist.wtf/reward-programs"
-                        target="_blank"
-                        className="stake-lp-button"
-                      >
-                        <Typography variant="body1">Stake in Crucible</Typography>
-                        <SvgIcon component={ArrowUp} color="primary" />
-                      </Button>
+                      <Box display="flex" justifyContent="space-around">
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Stake</Typography>
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Withdraw</Typography>
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Claim</Typography>
+                        </Button>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 </TableBody>
               </Table>
             </TableContainer>
-          ) : (
-            <div className="stake-pool">
-              <div className={`pool-card-top-row ${isMobileScreen && "small"}`}>
-                <Box className="ohm-pairs">
-                  <BondLogo bond={{ bondIconSvg: OhmLusdImg, isLP: true }}></BondLogo>
-                  <Typography gutterBottom={false}>OHM-LUSD</Typography>
-                </Box>
-              </div>
-              <div className="pool-data">
-                <div className="data-row">
-                  <Typography>APY</Typography>
-                  <Typography>"Coming Soon"</Typography>
-                </div>
-                <div className="data-row">
-                  <Typography>TVD</Typography>
-                  <Typography>1$</Typography>
-                </div>
-                <div className="data-row">
-                  <Typography>Balance</Typography>
-                  <Typography>0</Typography>
-                </div>
+          </TabPanel>
+          <TabPanel value={view} index={1} className="stake-tab-panel">
+            <TableContainer className="stake-table">
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Asset</TableCell>
+                    <TableCell align="left">APY</TableCell>
+                    <TableCell align="left">TVD</TableCell>
+                    <TableCell align="left">Deposit Fee</TableCell>
+                    <TableCell align="left">Balance</TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableHead>
 
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  href="https://crucible.alchemist.wtf/reward-programs"
-                  target="_blank"
-                  className="stake-lp-button"
-                  fullWidth
-                >
-                  <Typography variant="body1">Stake in Crucible</Typography>
-                  <SvgIcon component={ArrowUp} color="primary" />
-                </Button>
-              </div>
-            </div>
-          )}
+                <TableBody>
+                  <TableRow>
+                    <TableCell>
+                      <Box className="ohm-pairs">
+                        <BondLogo bond={{ bondIconSvg: DaiImg, isLP: true }}></BondLogo>
+                        <Typography>DAI</Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell align="left">
+                      235%
+                      {/*{isLusdLoading ? (
+                        <Skeleton width="80px" />
+                      ) : lusdData.apy === 0 ? (
+                        "Coming Soon"
+                      ) : (
+                        trim(lusdData.apy, 1) + "%"
+                      )}*/}
+                    </TableCell>
+                    <TableCell align="left">
+                      $0
+                      {/*{isLusdLoading ? (
+                        <Skeleton width="80px" />
+                      ) : (
+                        new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "USD",
+                          maximumFractionDigits: 0,
+                          minimumFractionDigits: 0,
+                        }).format(lusdData.tvl)
+                      )}*/}
+                    </TableCell>
+                    <TableCell align="left">
+                      0
+                      {/*{isLusdLoading ? <Skeleton width="80px" /> : (trim(ohmLusdReserveBalance, 2) || 0) + " SLP"}*/}
+                    </TableCell>
+                    <TableCell align="left">4%</TableCell>
+                    <TableCell align="center">
+                      <Box display="flex" justifyContent="space-around">
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Stake</Typography>
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Withdraw</Typography>
+                        </Button>
+                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
+                          <Typography variant="body1">Claim</Typography>
+                        </Button>
+                      </Box>
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </TabPanel>
         </div>
       </Paper>
     </Zoom>
