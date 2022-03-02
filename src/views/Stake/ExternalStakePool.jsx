@@ -25,8 +25,9 @@ import { ReactComponent as OhmLusdImg } from "src/assets/tokens/BEGO-DAI.svg";
 import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { trim } from "../../helpers";
+import { formatCurrency, trim } from "../../helpers";
 import TabPanel from "../../components/TabPanel";
+import { getFarmsDetail } from "../../helpers/Farms";
 
 function a11yProps(index) {
   return {
@@ -53,6 +54,8 @@ export default function ExternalStakePool() {
     setView(newView);
   };
 
+  const [farmConfig, setFarmConfig] = useState([]);
+
   useEffect(() => {
     if (hasCachedProvider()) {
       // then user DOES have a wallet
@@ -63,15 +66,12 @@ export default function ExternalStakePool() {
       // then user DOES NOT have a wallet
       setWalletChecked(true);
     }
+    if (provider && connected) {
+      getFarmsDetail(chainID, provider, address).then(re => {
+        setFarmConfig(re);
+      });
+    }
   }, []);
-
-  // this useEffect fires on state change from above. It will ALWAYS fire AFTER
-  // useEffect(() => {
-  //   // don't load ANY details until wallet is Checked
-  //   if (walletChecked) {
-  //     loadLusdData();
-  //   }
-  // }, [walletChecked]);
 
   return (
     <Zoom in={true}>
@@ -99,61 +99,64 @@ export default function ExternalStakePool() {
                     <TableCell align="left">APY</TableCell>
                     <TableCell align="left">TVD</TableCell>
                     <TableCell align="left">Deposit Fee</TableCell>
-                    <TableCell align="left">Balance</TableCell>
+                    <TableCell align="left">Staked</TableCell>
+                    <TableCell align="left">Reward</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <Box className="ohm-pairs">
-                        <BondLogo bond={{ bondIconSvg: OhmLusdImg, isLP: true }}></BondLogo>
-                        <Typography>BEGO-DAI</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="left">
-                      235%
-                      {/*{isLusdLoading ? (
-                        <Skeleton width="80px" />
-                      ) : lusdData.apy === 0 ? (
-                        "Coming Soon"
-                      ) : (
-                        trim(lusdData.apy, 1) + "%"
-                      )}*/}
-                    </TableCell>
-                    <TableCell align="left">
-                      $0
-                      {/*{isLusdLoading ? (
-                        <Skeleton width="80px" />
-                      ) : (
-                        new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0,
-                        }).format(lusdData.tvl)
-                      )}*/}
-                    </TableCell>
-                    <TableCell align="left">
-                      0
-                      {/*{isLusdLoading ? <Skeleton width="80px" /> : (trim(ohmLusdReserveBalance, 2) || 0) + " SLP"}*/}
-                    </TableCell>
-                    <TableCell align="left">4%</TableCell>
-                    <TableCell align="center">
-                      <Box display="flex" justifyContent="space-around">
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Stake</Typography>
-                        </Button>
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Withdraw</Typography>
-                        </Button>
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Claim</Typography>
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
+                  {farmConfig
+                    .filter(el => el.isLP)
+                    .map(el => (
+                      <TableRow>
+                        <TableCell>
+                          <Box className="ohm-pairs">
+                            <img src={`tokens/${el.image}`} />
+                            <Typography>{el.name}</Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="left">
+                          {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
+                        </TableCell>
+                        <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
+                        <TableCell align="left">{el.depositFee / 100}%</TableCell>
+                        <TableCell align="left">
+                          {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
+                        </TableCell>
+                        <TableCell align="left">
+                          {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Stake</Typography>
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Withdraw</Typography>
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Claim</Typography>
+                            </Button>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -167,61 +170,64 @@ export default function ExternalStakePool() {
                     <TableCell align="left">APY</TableCell>
                     <TableCell align="left">TVD</TableCell>
                     <TableCell align="left">Deposit Fee</TableCell>
-                    <TableCell align="left">Balance</TableCell>
+                    <TableCell align="left">Staked</TableCell>
+                    <TableCell align="left">Reward</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>
 
                 <TableBody>
-                  <TableRow>
-                    <TableCell>
-                      <Box className="ohm-pairs">
-                        <BondLogo bond={{ bondIconSvg: DaiImg, isLP: true }}></BondLogo>
-                        <Typography>DAI</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell align="left">
-                      235%
-                      {/*{isLusdLoading ? (
-                        <Skeleton width="80px" />
-                      ) : lusdData.apy === 0 ? (
-                        "Coming Soon"
-                      ) : (
-                        trim(lusdData.apy, 1) + "%"
-                      )}*/}
-                    </TableCell>
-                    <TableCell align="left">
-                      $0
-                      {/*{isLusdLoading ? (
-                        <Skeleton width="80px" />
-                      ) : (
-                        new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "USD",
-                          maximumFractionDigits: 0,
-                          minimumFractionDigits: 0,
-                        }).format(lusdData.tvl)
-                      )}*/}
-                    </TableCell>
-                    <TableCell align="left">
-                      0
-                      {/*{isLusdLoading ? <Skeleton width="80px" /> : (trim(ohmLusdReserveBalance, 2) || 0) + " SLP"}*/}
-                    </TableCell>
-                    <TableCell align="left">4%</TableCell>
-                    <TableCell align="center">
-                      <Box display="flex" justifyContent="space-around">
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Stake</Typography>
-                        </Button>
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Withdraw</Typography>
-                        </Button>
-                        <Button variant="outlined" color="secondary" onClick={stakeHandler} className="stake-lp-button">
-                          <Typography variant="body1">Claim</Typography>
-                        </Button>
-                      </Box>
-                    </TableCell>
-                  </TableRow>
+                  {farmConfig
+                    .filter(el => !el.isLP)
+                    .map(el => (
+                      <TableRow>
+                        <TableCell>
+                          <Box className="ohm-pairs">
+                            <img src={`tokens/${el.image}`} />
+                            <Typography>{el.name}</Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="left">
+                          {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
+                        </TableCell>
+                        <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
+                        <TableCell align="left">{el.depositFee / 100}%</TableCell>
+                        <TableCell align="left">
+                          {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
+                        </TableCell>
+                        <TableCell align="left">
+                          {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Stake</Typography>
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Withdraw</Typography>
+                            </Button>
+                            <Button
+                              variant="outlined"
+                              color="secondary"
+                              onClick={stakeHandler}
+                              className="stake-lp-button"
+                            >
+                              <Typography variant="body1">Claim</Typography>
+                            </Button>
+                          </Box>
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </TableContainer>

@@ -18,8 +18,6 @@ export const dai = new StableBond({
   displayName: "DAI",
   bondToken: "DAI",
   isAvailable: {
-    [NetworkID.Mainnet]: true,
-    [NetworkID.Testnet]: true,
     [NetworkID.FantomTestnet]: true,
     [NetworkID.Fantom]: false,
     [NetworkID.Mumbai]: false,
@@ -28,14 +26,6 @@ export const dai = new StableBond({
   bondIconSvg: DaiImg,
   bondContractABI: DaiBondContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0x4179F89782B95fBD45328E3935DdEFb437657FC9",
       reserveAddress: "0xfdd98d5Bd2E6de01d45E356B8702F14AF9D2a7D4",
@@ -60,8 +50,6 @@ export const dai_1 = new StableBond({
   displayName: "DAI",
   bondToken: "DAI",
   isAvailable: {
-    [NetworkID.Mainnet]: true,
-    [NetworkID.Testnet]: true,
     [NetworkID.FantomTestnet]: false,
     [NetworkID.Fantom]: true,
     [NetworkID.Mumbai]: true,
@@ -70,14 +58,6 @@ export const dai_1 = new StableBond({
   bondIconSvg: DaiImg,
   bondContractABI: DaiBondContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0x452B9e16f5dE21372B9a83CFC1Cf080FACa06D67",
       reserveAddress: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
@@ -106,14 +86,6 @@ export const ohm_dai = new LPBond({
   bondContractABI: BondOhmDaiContract,
   reserveContract: ReserveOhmDaiContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0xb160DB3963FDe16777AEcAE44b441bC7a0E4B260",
       reserveAddress: "0xb1afd9f533a2b4778fce9a0a4638e0580e16269b",
@@ -143,14 +115,6 @@ export const ohm_dai_1 = new LPBond({
   bondContractABI: BondOhmDaiContract,
   reserveContract: ReserveOhmDaiContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0xb160DB3963FDe16777AEcAE44b441bC7a0E4B260",
       reserveAddress: "0xb1afd9f533a2b4778fce9a0a4638e0580e16269b",
@@ -179,14 +143,6 @@ export const wftm = new StableBond({
   bondIconSvg: WFTMImg,
   bondContractABI: BondOhmDaiContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0x8fC50bAFE7F83BD7883eed92D8Ca017B416e3D52",
       reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",
@@ -214,14 +170,6 @@ export const wftm_1 = new StableBond({
   bondIconSvg: WFTMImg,
   bondContractABI: BondOhmDaiContract,
   networkAddrs: {
-    [NetworkID.Mainnet]: {
-      bondAddress: "0x575409F8d77c12B05feD8B455815f0e54797381c",
-      reserveAddress: "0x6b175474e89094c44da98b954eedeac495271d0f",
-    },
-    [NetworkID.Testnet]: {
-      bondAddress: "0xDea5668E815dAF058e3ecB30F645b04ad26374Cf",
-      reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
-    },
     [NetworkID.FantomTestnet]: {
       bondAddress: "0x8fC50bAFE7F83BD7883eed92D8Ca017B416e3D52",
       reserveAddress: "0xf1903E0264FaC93Be0163c142DB647B93b3ce0d4",

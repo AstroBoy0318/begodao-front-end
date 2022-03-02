@@ -8,8 +8,6 @@ import React, { ReactNode } from "react";
 import { getTokenPrice } from "../helpers/GetPrice";
 
 export enum NetworkID {
-  Mainnet = 1,
-  Testnet = 4,
   FantomTestnet = 4002,
   Fantom = 250,
   Mumbai = 80001,
@@ -27,8 +25,6 @@ export interface BondAddresses {
 }
 
 export interface NetworkAddresses {
-  [NetworkID.Mainnet]: BondAddresses;
-  [NetworkID.Testnet]: BondAddresses;
   [NetworkID.FantomTestnet]: BondAddresses;
   [NetworkID.Fantom]: BondAddresses;
   [NetworkID.Mumbai]: BondAddresses;
@@ -36,8 +32,6 @@ export interface NetworkAddresses {
 }
 
 export interface Available {
-  [NetworkID.Mainnet]?: boolean;
-  [NetworkID.Testnet]?: boolean;
   [NetworkID.FantomTestnet]?: boolean;
   [NetworkID.Fantom]?: boolean;
   [NetworkID.Mumbai]?: boolean;
