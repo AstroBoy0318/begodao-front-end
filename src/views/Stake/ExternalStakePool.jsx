@@ -146,14 +146,10 @@ export default function ExternalStakePool(param) {
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
+          <TableCell align="left">{el.tvl}</TableCell>
           <TableCell align="left">{el.depositFee / 100}%</TableCell>
-          <TableCell align="left">
-            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
-          </TableCell>
-          <TableCell align="left">
-            {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
-          </TableCell>
+          <TableCell align="left">{el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance}</TableCell>
+          <TableCell align="left">{el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward}</TableCell>
         </TableRow>
         {el.allowance === 0 ? (
           <TableRow>
@@ -276,7 +272,7 @@ export default function ExternalStakePool(param) {
                   <TableRow>
                     <TableCell>Asset</TableCell>
                     <TableCell align="left">APY</TableCell>
-                    <TableCell align="left">TVD</TableCell>
+                    <TableCell align="left">TVL</TableCell>
                     <TableCell align="left">Deposit Fee</TableCell>
                     <TableCell align="left">Staked</TableCell>
                     <TableCell align="left">Reward</TableCell>
