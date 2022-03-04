@@ -16,6 +16,8 @@ import {
   Zoom,
   Tab,
   Tabs,
+  InputAdornment,
+  OutlinedInput,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
 
@@ -44,6 +46,8 @@ export default function ExternalStakePool() {
   const isMobileScreen = useMediaQuery("(max-width: 513px)");
   const [view, setView] = useState(0);
   const [zoomed, setZoomed] = useState(false);
+  const [stakeValue, setStakeValue] = useState({});
+  const [withdrawValue, setWithdrawValue] = useState({});
 
   const ohmLusdReserveBalance = useSelector(state => {
     return state.account && state.account.bonds?.ohm_lusd_lp?.balance;
@@ -66,12 +70,31 @@ export default function ExternalStakePool() {
       // then user DOES NOT have a wallet
       setWalletChecked(true);
     }
+  }, []);
+
+  useEffect(() => {
     if (provider && connected) {
       getFarmsDetail(chainID, provider, address).then(re => {
         setFarmConfig(re);
       });
     }
-  }, []);
+  }, [provider, connected, address]);
+
+  const changeStakeValue = (id, value) => {
+    let oldStakeValue = JSON.parse(JSON.stringify(stakeValue));
+    oldStakeValue[id] = value;
+    setStakeValue(oldStakeValue);
+  };
+
+  const setStakeMax = (id, token) => {};
+
+  const changeWithdrawValue = (id, value) => {
+    let oldWithdrawValue = JSON.parse(JSON.stringify(withdrawValue));
+    oldWithdrawValue[id] = value;
+    setWithdrawValue(oldWithdrawValue);
+  };
+
+  const setWithdrawMax = (id, amount) => {};
 
   return (
     <Zoom in={true}>
@@ -101,62 +124,135 @@ export default function ExternalStakePool() {
                     <TableCell align="left">Deposit Fee</TableCell>
                     <TableCell align="left">Staked</TableCell>
                     <TableCell align="left">Reward</TableCell>
-                    <TableCell></TableCell>
+                    {/*<TableCell></TableCell>*/}
                   </TableRow>
                 </TableHead>
-
                 <TableBody>
                   {farmConfig
-                    .filter(el => el.isLP)
-                    .map(el => (
-                      <TableRow>
-                        <TableCell>
-                          <Box className="ohm-pairs">
-                            <img src={`tokens/${el.image}`} />
-                            <Typography>{el.name}</Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="left">
-                          {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
-                        </TableCell>
-                        <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
-                        <TableCell align="left">{el.depositFee / 100}%</TableCell>
-                        <TableCell align="left">
-                          {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
-                        </TableCell>
-                        <TableCell align="left">
-                          {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Box display="flex" justifyContent="space-around" flexWrap="wrap">
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Stake</Typography>
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Withdraw</Typography>
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Claim</Typography>
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    // .filter(el => el.isLP)
+                    .map(
+                      (el, idx) =>
+                        el.isLP && (
+                          <>
+                            <TableRow className="bordered-row">
+                              <TableCell>
+                                <Box className="ohm-pairs">
+                                  <img src={`tokens/${el.image}`} />
+                                  <Typography>{el.name}</Typography>
+                                </Box>
+                              </TableCell>
+                              <TableCell align="left">
+                                {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
+                              </TableCell>
+                              <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
+                              <TableCell align="left">{el.depositFee / 100}%</TableCell>
+                              <TableCell align="left">
+                                {el.stakedBalance === 0 ? (
+                                  <Skeleton width="80px" />
+                                ) : (
+                                  formatCurrency(el.stakedBalance, 2)
+                                )}
+                              </TableCell>
+                              <TableCell align="left">
+                                {el.pendingReward === 0 ? (
+                                  <Skeleton width="80px" />
+                                ) : (
+                                  formatCurrency(el.pendingReward, 2)
+                                )}
+                              </TableCell>
+                            </TableRow>
+                            {el.allowance === 0 ? (
+                              <TableRow>
+                                <TableCell colSpan={6}>
+                                  <Box display="flex" justifyContent="center">
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={stakeHandler}
+                                      className="approve-button"
+                                    >
+                                      <Typography variant="body1">Approve</Typography>
+                                    </Button>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={2}>
+                                  <Box display="flex" justifyContent="center">
+                                    <OutlinedInput
+                                      type="number"
+                                      placeholder="Enter an amount"
+                                      className="stake-input"
+                                      value={stakeValue[el.id]}
+                                      onChange={e => changeStakeValue(el.id, e.target.value)}
+                                      labelWidth={0}
+                                      endAdornment={
+                                        <InputAdornment position="end">
+                                          <Button variant="text" onClick={setStakeMax(el.id, el.token)} color="inherit">
+                                            Max
+                                          </Button>
+                                        </InputAdornment>
+                                      }
+                                    />
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={stakeHandler}
+                                      className="stake-lp-button"
+                                    >
+                                      <Typography variant="body1">Stake</Typography>
+                                    </Button>
+                                  </Box>
+                                </TableCell>
+                                <TableCell colSpan={2}>
+                                  <Box display="flex" justifyContent="center">
+                                    <OutlinedInput
+                                      type="number"
+                                      placeholder="Enter an amount"
+                                      className="stake-input"
+                                      value={withdrawValue[el.id]}
+                                      onChange={e => changeWithdrawValue(el.id, e.target.value)}
+                                      labelWidth={0}
+                                      endAdornment={
+                                        <InputAdornment position="end">
+                                          <Button
+                                            variant="text"
+                                            onClick={setWithdrawMax(el.id, el.stakedBalance)}
+                                            color="inherit"
+                                          >
+                                            Max
+                                          </Button>
+                                        </InputAdornment>
+                                      }
+                                    />
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={stakeHandler}
+                                      className="stake-lp-button"
+                                    >
+                                      <Typography variant="body1">Withdraw</Typography>
+                                    </Button>
+                                  </Box>
+                                </TableCell>
+                                <TableCell colSpan={2}>
+                                  <Box display="flex" justifyContent="center">
+                                    <Button
+                                      variant="outlined"
+                                      color="secondary"
+                                      onClick={stakeHandler}
+                                      className="stake-lp-button"
+                                    >
+                                      <Typography variant="body1">Claim</Typography>
+                                    </Button>
+                                  </Box>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </>
+                        ),
+                    )}
                 </TableBody>
               </Table>
             </TableContainer>
@@ -178,56 +274,59 @@ export default function ExternalStakePool() {
 
                 <TableBody>
                   {farmConfig
-                    .filter(el => !el.isLP)
-                    .map(el => (
-                      <TableRow>
-                        <TableCell>
-                          <Box className="ohm-pairs">
-                            <img src={`tokens/${el.image}`} />
-                            <Typography>{el.name}</Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell align="left">
-                          {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
-                        </TableCell>
-                        <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
-                        <TableCell align="left">{el.depositFee / 100}%</TableCell>
-                        <TableCell align="left">
-                          {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
-                        </TableCell>
-                        <TableCell align="left">
-                          {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
-                        </TableCell>
-                        <TableCell align="center">
-                          <Box display="flex" justifyContent="space-around" flexWrap="wrap">
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Stake</Typography>
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Withdraw</Typography>
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="secondary"
-                              onClick={stakeHandler}
-                              className="stake-lp-button"
-                            >
-                              <Typography variant="body1">Claim</Typography>
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    // .filter(el => !el.isLP)
+                    .map(
+                      (el, idx) =>
+                        !el.isLP && (
+                          <TableRow>
+                            <TableCell>
+                              <Box className="ohm-pairs">
+                                <img src={`tokens/${el.image}`} />
+                                <Typography>{el.name}</Typography>
+                              </Box>
+                            </TableCell>
+                            <TableCell align="left">
+                              {el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}
+                            </TableCell>
+                            <TableCell align="left">{formatCurrency(el.tvl, 2)}</TableCell>
+                            <TableCell align="left">{el.depositFee / 100}%</TableCell>
+                            <TableCell align="left">
+                              {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatCurrency(el.stakedBalance, 2)}
+                            </TableCell>
+                            <TableCell align="left">
+                              {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatCurrency(el.pendingReward, 2)}
+                            </TableCell>
+                            <TableCell align="center">
+                              <Box display="flex" justifyContent="space-around" flexWrap="wrap">
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  onClick={stakeHandler}
+                                  className="stake-lp-button"
+                                >
+                                  <Typography variant="body1">Stake</Typography>
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  onClick={stakeHandler}
+                                  className="stake-lp-button"
+                                >
+                                  <Typography variant="body1">Withdraw</Typography>
+                                </Button>
+                                <Button
+                                  variant="outlined"
+                                  color="secondary"
+                                  onClick={stakeHandler}
+                                  className="stake-lp-button"
+                                >
+                                  <Typography variant="body1">Claim</Typography>
+                                </Button>
+                              </Box>
+                            </TableCell>
+                          </TableRow>
+                        ),
+                    )}
                 </TableBody>
               </Table>
             </TableContainer>

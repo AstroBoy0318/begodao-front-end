@@ -2,6 +2,7 @@ import { NetworkID } from "../lib/Bond";
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
 import { abi as masterchefAbi } from "../abi/Masterchef.json";
 import { abi as erc20 } from "../abi/IERC20.json";
+import { abi as xBegoAbi } from "../abi/xBegoToken.json";
 import { ethers } from "ethers";
 import { addresses, farms, SECONDS_PER_YEAR } from "../constants";
 import { getLPTokenPrice, getTokenPrice } from "./GetPrice";
@@ -41,6 +42,14 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
       const pendingReward = userAddress
         ? Number(ethers.utils.formatUnits(await masterchefContract.pendingxbego(el.id, userAddress)))
         : 0;
+      const allowance = userAddress
+        ? Number(
+            ethers.utils.formatUnits(
+              await xBegoContract.allowance(userAddress, addresses[networkID].MASTERCHEF_ADDRESS),
+              xBegoDecimals,
+            ),
+          )
+        : 0;
       return {
         ...el,
         token: token,
@@ -50,8 +59,44 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
         tvl: totalStaked,
         stakedBalance: stakedBalance,
         pendingReward: pendingReward,
+        allowance: allowance,
       };
     }),
   );
   return farmDetails;
+}
+
+export async function getXbegoTotalSupply(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, erc20, provider);
+  const xBegoDecimals = Number(await xBegoContract.decimals());
+  const totalSupply = Number(ethers.utils.formatUnits(await xBegoContract.totalSupply(), xBegoDecimals));
+  return totalSupply;
+}
+
+export async function getLockedXbego(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, erc20, provider);
+  const xBegoDecimals = Number(await xBegoContract.decimals());
+  const lockedBal = Number(
+    ethers.utils.formatUnits(await xBegoContract.balanceOf(addresses[networkID].MASTERCHEF_ADDRESS), xBegoDecimals),
+  );
+  return lockedBal;
+}
+
+export async function getXbegoMaxSupply(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, xBegoAbi, provider);
+  const xBegoDecimals = Number(await xBegoContract.decimals());
+  const maxSupply = Number(ethers.utils.formatUnits(await xBegoContract.maxSupply(), xBegoDecimals));
+  return maxSupply;
+}
+
+export async function getRewardPerSec(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const masterchefContract = new ethers.Contract(
+    addresses[networkID].MASTERCHEF_ADDRESS as string,
+    masterchefAbi,
+    provider,
+  );
+  const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, erc20, provider);
+  const xBegoDecimals = Number(await xBegoContract.decimals());
+  const rewardPerSec = Number(ethers.utils.formatUnits(await masterchefContract.xbegoPerSec(), xBegoDecimals));
+  return rewardPerSec;
 }
