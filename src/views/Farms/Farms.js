@@ -22,24 +22,27 @@ function Farms() {
   const { provider, hasCachedProvider, address, connected, connect, chainID } = useWeb3Context();
   useEffect(() => {
     if (provider && connected) {
-      getTokenPrice(chainID, provider, addresses[chainID].XBEGO_ADDRESS).then(price => {
-        setMarketPrice(price);
-        getXbegoTotalSupply(chainID, provider).then(re => {
-          setTotalSupply(re);
-          setMarketCap(re * price);
-        });
-      });
-      getXbegoMaxSupply(chainID, provider).then(re => {
-        setMaxSupply(re);
-      });
-      getLockedXbego(chainID, provider).then(re => {
-        setLockedBal(re);
-      });
-      getRewardPerSec(chainID, provider).then(re => {
-        setRewardPerSec(re);
-      });
+      updateInfo();
     }
   }, [provider, connected, address]);
+  const updateInfo = () => {
+    getTokenPrice(chainID, provider, addresses[chainID].XBEGO_ADDRESS).then(price => {
+      setMarketPrice(price);
+      getXbegoTotalSupply(chainID, provider).then(re => {
+        setTotalSupply(re);
+        setMarketCap(re * price);
+      });
+    });
+    getXbegoMaxSupply(chainID, provider).then(re => {
+      setMaxSupply(re);
+    });
+    getLockedXbego(chainID, provider).then(re => {
+      setLockedBal(re);
+    });
+    getRewardPerSec(chainID, provider).then(re => {
+      setRewardPerSec(re);
+    });
+  };
   return (
     <div id="farm-dashboard" className={`${smallerScreen && "smaller"} ${verySmallScreen && "very-small"}`}>
       <Container
@@ -104,7 +107,7 @@ function Farms() {
             </Box>
           </Paper>
           <div>
-            <ExternalStakePool />
+            <ExternalStakePool updateInfo={updateInfo} />
           </div>
         </Box>
       </Container>

@@ -1,7 +1,7 @@
 import { NetworkID } from "../lib/Bond";
 import { StaticJsonRpcProvider } from "@ethersproject/providers";
 import { abi as masterchefAbi } from "../abi/Masterchef.json";
-import { abi as erc20 } from "../abi/IERC20.json";
+import { abi as dai_abi, abi as erc20 } from "../abi/IERC20.json";
 import { abi as xBegoAbi } from "../abi/xBegoToken.json";
 import { ethers } from "ethers";
 import { addresses, farms, SECONDS_PER_YEAR } from "../constants";
@@ -45,7 +45,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
       const allowance = userAddress
         ? Number(
             ethers.utils.formatUnits(
-              await xBegoContract.allowance(userAddress, addresses[networkID].MASTERCHEF_ADDRESS),
+              await tokenContract.allowance(userAddress, addresses[networkID].MASTERCHEF_ADDRESS),
               xBegoDecimals,
             ),
           )
@@ -99,4 +99,67 @@ export async function getRewardPerSec(networkID: NetworkID, provider: StaticJson
   const xBegoDecimals = Number(await xBegoContract.decimals());
   const rewardPerSec = Number(ethers.utils.formatUnits(await masterchefContract.xbegoPerSec(), xBegoDecimals));
   return rewardPerSec;
+}
+
+export async function getTokenBalance(provider: StaticJsonRpcProvider, tokenAddress: string, account: string) {
+  const tokenContract = new ethers.Contract(tokenAddress, erc20, provider);
+  const decimals = Number(await tokenContract.decimals());
+  const balance = Number(ethers.utils.formatUnits(await tokenContract.balanceOf(account), decimals));
+  return balance;
+}
+
+export async function tokenApprove(networkID: NetworkID, provider: StaticJsonRpcProvider, tokenAddress: string) {
+  try {
+    const tokenContract = new ethers.Contract(tokenAddress, dai_abi, provider.getSigner());
+    const tx = await tokenContract.approve(
+      addresses[networkID].MASTERCHEF_ADDRESS,
+      "0xffffffffffffffffffffffffffffffffffff",
+    );
+    await tx.wait();
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export async function stakeToken(
+  networkID: NetworkID,
+  provider: StaticJsonRpcProvider,
+  id: number,
+  amount: number,
+  decimals: number,
+) {
+  try {
+    const masterchefContract = new ethers.Contract(
+      addresses[networkID].MASTERCHEF_ADDRESS as string,
+      masterchefAbi,
+      provider.getSigner(),
+    );
+    const tx = await masterchefContract.deposit(id, ethers.utils.parseUnits(amount.toString(), decimals));
+    await tx.wait();
+    return true;
+  } catch (ex) {
+    return false;
+  }
+}
+
+export async function withdrawToken(
+  networkID: NetworkID,
+  provider: StaticJsonRpcProvider,
+  id: number,
+  amount: number,
+  decimals: number,
+) {
+  try {
+    const masterchefContract = new ethers.Contract(
+      addresses[networkID].MASTERCHEF_ADDRESS as string,
+      masterchefAbi,
+      provider.getSigner(),
+    );
+    const tx = await masterchefContract.withdraw(id, ethers.utils.parseUnits(amount.toString(), decimals));
+    await tx.wait();
+    return true;
+  } catch (ex) {
+    return false;
+  }
 }
