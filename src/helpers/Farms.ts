@@ -53,6 +53,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
       return {
         ...el,
         token: token,
+        decimals: tokenDecimals,
         allocPoint: allocPoint,
         depositFee: depositFee,
         apy: apy,

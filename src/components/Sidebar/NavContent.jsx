@@ -10,6 +10,7 @@ import { ReactComponent as RoadMapIcon } from "../../assets/icons/road-map.svg";
 import { ReactComponent as NFTIcon } from "../../assets/icons/nft-icon.svg";
 import { ReactComponent as UpArrow } from "../../assets/icons/up-arrow.svg";
 import { ReactComponent as FarmIcon } from "../../assets/icons/farm-tractor.svg";
+import { ReactComponent as UsdcIcon } from "../../assets/icons/usdc.svg";
 import { trim, shorten } from "../../helpers";
 import { useAddress, useWeb3Context } from "src/hooks/web3Context";
 import useBonds from "../../hooks/Bonds";
@@ -50,6 +51,9 @@ function NavContent() {
       return true;
     }
     if (currentPath.indexOf("farms") >= 0 && page === "farms") {
+      return true;
+    }
+    if (currentPath.indexOf("divends") >= 0 && page === "divends") {
       return true;
     }
     return false;
@@ -148,6 +152,21 @@ function NavContent() {
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={FarmIcon} viewBox="0 0 122.88 95.45" />
                   Farms
+                </Typography>
+              </Link>
+
+              <Link
+                component={NavLink}
+                id="divends-nav"
+                to="/divends"
+                isActive={(match, location) => {
+                  return checkPage(match, location, "divends");
+                }}
+                className={`button-dapp-menu ${isActive ? "active" : ""}`}
+              >
+                <Typography variant="h6">
+                  <SvgIcon color="primary" component={UsdcIcon} viewBox="0 0 2000 2000" />
+                  Divends
                 </Typography>
               </Link>
 

@@ -32,6 +32,7 @@ import { v4 as uuidv4 } from "uuid";
 import "./style.scss";
 import { OrderContextProvider } from "./context/OrderContext";
 import Farms from "./views/Farms/Farms";
+import Divends from "./views/Divends/Divends";
 
 // 😬 Sorry for all the console logging
 const DEBUG = false;
@@ -243,6 +244,10 @@ function App() {
 
               <Route path="/farms">
                 <Farms />
+              </Route>
+
+              <Route path="/divends">
+                <Divends />
               </Route>
 
               {/*

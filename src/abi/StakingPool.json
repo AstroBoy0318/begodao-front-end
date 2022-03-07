@@ -1,12 +1,22 @@
 {
-  "contractName": "Masterchef",
+  "contractName": "StakingPool",
   "abi": [
     {
       "inputs": [
         {
-          "internalType": "contract xBegoToken",
-          "name": "_xbego",
+          "internalType": "contract IERC20",
+          "name": "_stakeToken",
           "type": "address"
+        },
+        {
+          "internalType": "contract IERC20",
+          "name": "_rewardToken",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_rewardPerTime",
+          "type": "uint256"
         },
         {
           "internalType": "uint256",
@@ -14,9 +24,9 @@
           "type": "uint256"
         },
         {
-          "internalType": "address",
-          "name": "_feeAdd",
-          "type": "address"
+          "internalType": "uint256",
+          "name": "_bonusEndTime",
+          "type": "uint256"
         }
       ],
       "stateMutability": "nonpayable",
@@ -27,46 +37,9 @@
       "inputs": [
         {
           "indexed": true,
-          "internalType": "uint256",
-          "name": "pid",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "address",
-          "name": "lpToken",
-          "type": "address"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "allocPoint",
-          "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint16",
-          "name": "depositFeeBP",
-          "type": "uint16"
-        }
-      ],
-      "name": "Add",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
           "internalType": "address",
           "name": "user",
           "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "pid",
-          "type": "uint256"
         },
         {
           "indexed": false,
@@ -82,16 +55,42 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "DepositRewards",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": true,
           "internalType": "address",
           "name": "user",
           "type": "address"
         },
         {
-          "indexed": true,
+          "indexed": false,
           "internalType": "uint256",
-          "name": "pid",
+          "name": "amount",
           "type": "uint256"
+        }
+      ],
+      "name": "EmergencyRewardWithdraw",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
         },
         {
           "indexed": false,
@@ -126,31 +125,38 @@
       "anonymous": false,
       "inputs": [
         {
-          "indexed": true,
+          "indexed": false,
           "internalType": "uint256",
-          "name": "pid",
+          "name": "oldBonusEndTime",
           "type": "uint256"
         },
         {
           "indexed": false,
-          "internalType": "address",
-          "name": "lpToken",
-          "type": "address"
-        },
-        {
-          "indexed": false,
           "internalType": "uint256",
-          "name": "allocPoint",
+          "name": "newBonusEndTime",
           "type": "uint256"
-        },
-        {
-          "indexed": false,
-          "internalType": "uint16",
-          "name": "depositFeeBP",
-          "type": "uint16"
         }
       ],
-      "name": "Set",
+      "name": "SetBonusEndTime",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "oldRewardPerTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "newRewardPerTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "SetRewardPerTime",
       "type": "event"
     },
     {
@@ -165,11 +171,11 @@
         {
           "indexed": false,
           "internalType": "uint256",
-          "name": "xbegoPerSec",
+          "name": "amount",
           "type": "uint256"
         }
       ],
-      "name": "UpdateEmissionRate",
+      "name": "SkimStakeTokenFees",
       "type": "event"
     },
     {
@@ -180,44 +186,6 @@
           "internalType": "address",
           "name": "user",
           "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newAddress",
-          "type": "address"
-        }
-      ],
-      "name": "UpdateFeeAddress",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "newStartTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "UpdateStartTime",
-      "type": "event"
-    },
-    {
-      "anonymous": false,
-      "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "user",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "uint256",
-          "name": "pid",
-          "type": "uint256"
         },
         {
           "indexed": false,
@@ -231,7 +199,7 @@
     },
     {
       "inputs": [],
-      "name": "MAX_PERSEC",
+      "name": "MAX_REWARD_PER_TIME",
       "outputs": [
         {
           "internalType": "uint256",
@@ -244,7 +212,7 @@
     },
     {
       "inputs": [],
-      "name": "MIN_PERSEC",
+      "name": "bonusEndTime",
       "outputs": [
         {
           "internalType": "uint256",
@@ -257,39 +225,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_allocPoint",
-          "type": "uint256"
-        },
-        {
-          "internalType": "contract IERC20",
-          "name": "_lpToken",
-          "type": "address"
-        },
-        {
-          "internalType": "uint16",
-          "name": "_depositFeeBP",
-          "type": "uint16"
-        },
-        {
-          "internalType": "bool",
-          "name": "_withUpdate",
-          "type": "bool"
-        }
-      ],
-      "name": "add",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        },
         {
           "internalType": "uint256",
           "name": "_amount",
@@ -305,26 +240,33 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_pid",
+          "name": "_amount",
           "type": "uint256"
         }
       ],
-      "name": "emergencyWithdraw",
+      "name": "depositRewards",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "emergencyRewardWithdraw",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
       "inputs": [],
-      "name": "feeAdd",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
+      "name": "emergencyWithdraw",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -353,9 +295,15 @@
     },
     {
       "inputs": [],
-      "name": "massUpdatePools",
-      "outputs": [],
-      "stateMutability": "nonpayable",
+      "name": "getStakeTokenFeeBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -374,17 +322,12 @@
     {
       "inputs": [
         {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        },
-        {
           "internalType": "address",
           "name": "_user",
           "type": "address"
         }
       ],
-      "name": "pendingxbego",
+      "name": "pendingReward",
       "outputs": [
         {
           "internalType": "uint256",
@@ -396,32 +339,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "contract IERC20",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "name": "poolExistence",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
+      "inputs": [],
       "name": "poolInfo",
       "outputs": [
         {
@@ -431,27 +349,12 @@
         },
         {
           "internalType": "uint256",
-          "name": "allocPoint",
+          "name": "lastRewardTime",
           "type": "uint256"
         },
         {
           "internalType": "uint256",
-          "name": "lastRewardperSec",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "accxbegoPerShare",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint16",
-          "name": "depositFeeBP",
-          "type": "uint16"
-        },
-        {
-          "internalType": "uint256",
-          "name": "lpSupply",
+          "name": "accRewardTokenPerShare",
           "type": "uint256"
         }
       ],
@@ -460,7 +363,7 @@
     },
     {
       "inputs": [],
-      "name": "poolLength",
+      "name": "rewardBalance",
       "outputs": [
         {
           "internalType": "uint256",
@@ -472,31 +375,75 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "rewardPerTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "rewardToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_pid",
+          "name": "_bonusEndTime",
           "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_allocPoint",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint16",
-          "name": "_depositFeeBP",
-          "type": "uint16"
-        },
-        {
-          "internalType": "bool",
-          "name": "_withUpdate",
-          "type": "bool"
         }
       ],
-      "name": "set",
+      "name": "setBonusEndTime",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "_rewardPerTime",
+          "type": "uint256"
+        }
+      ],
+      "name": "setRewardPerTime",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "skimStakeTokenFees",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "stakeToken",
+      "outputs": [
+        {
+          "internalType": "contract IERC20",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -514,7 +461,20 @@
     },
     {
       "inputs": [],
-      "name": "totalAllocPoint",
+      "name": "totalStakeTokenBalance",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "totalStaked",
       "outputs": [
         {
           "internalType": "uint256",
@@ -539,39 +499,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_xbegoPerSec",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateEmissionRate",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "_feeAdd",
-          "type": "address"
-        }
-      ],
-      "name": "updateFeeAddress",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        }
-      ],
+      "inputs": [],
       "name": "updatePool",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -579,24 +507,6 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_newStartTime",
-          "type": "uint256"
-        }
-      ],
-      "name": "updateStartTime",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        },
         {
           "internalType": "address",
           "name": "",
@@ -623,11 +533,6 @@
       "inputs": [
         {
           "internalType": "uint256",
-          "name": "_pid",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
           "name": "_amount",
           "type": "uint256"
         }
@@ -635,32 +540,6 @@
       "name": "withdraw",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "xbego",
-      "outputs": [
-        {
-          "internalType": "contract xBegoToken",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "xbegoPerSec",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     }
   ],

@@ -1,63 +1,39 @@
+import { useDispatch, useSelector } from "react-redux";
+import { useWeb3Context } from "../../hooks";
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { getPoolsDetail, stakeToken, tokenApprove, withdrawToken } from "../../helpers/Pools";
 import {
   Box,
-  Paper,
-  Typography,
   Button,
-  SvgIcon,
-  TableHead,
-  TableCell,
-  TableBody,
-  Table,
-  TableRow,
-  TableContainer,
-  Zoom,
-  Tab,
-  Tabs,
   InputAdornment,
   OutlinedInput,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Zoom,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
+import { trim } from "../../helpers";
+import "./divends.scss";
+import { getTokenBalance } from "../../helpers/Farms";
 
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import BondLogo from "../../components/BondLogo";
-import { ReactComponent as OhmLusdImg } from "src/assets/tokens/BEGO-DAI.svg";
-import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
-import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
-import { useWeb3Context } from "src/hooks/web3Context";
-import { formatCurrency, trim } from "../../helpers";
-import TabPanel from "../../components/TabPanel";
-import { getFarmsDetail, getTokenBalance, stakeToken, tokenApprove, withdrawToken } from "../../helpers/Farms";
-
-function a11yProps(index) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
-
-export default function ExternalStakePool(param) {
-  const dispatch = useDispatch();
+export default function Divends() {
   const { provider, hasCachedProvider, address, connected, connect, chainID } = useWeb3Context();
   const [walletChecked, setWalletChecked] = useState(false);
   const isSmallScreen = useMediaQuery("(max-width: 705px)");
-  const isMobileScreen = useMediaQuery("(max-width: 513px)");
-  const [view, setView] = useState(0);
-  const [zoomed, setZoomed] = useState(false);
   const [stakeValue, setStakeValue] = useState({});
   const [withdrawValue, setWithdrawValue] = useState({});
   const [pending, setPending] = useState(false);
 
-  const ohmLusdReserveBalance = useSelector(state => {
-    return state.account && state.account.bonds?.ohm_lusd_lp?.balance;
-  });
-
   const stakeHandler = async (id, decimals) => {
-    alert(decimals);
     setPending(true);
-    if (await stakeToken(chainID, provider, id, stakeValue[id], decimals)) {
+    if (await stakeToken(chainID, provider, poolConfig[id].address, stakeValue[id], decimals)) {
       updateFarmConfig();
     }
     setPending(false);
@@ -65,7 +41,7 @@ export default function ExternalStakePool(param) {
 
   const claimHandler = async id => {
     setPending(true);
-    if (await stakeToken(chainID, provider, id, 0, 18)) {
+    if (await stakeToken(chainID, provider, poolConfig[id].address, 0, 18)) {
       updateFarmConfig();
     }
     setPending(false);
@@ -73,17 +49,13 @@ export default function ExternalStakePool(param) {
 
   const withdrawHandler = async id => {
     setPending(true);
-    if (await withdrawToken(chainID, provider, id, withdrawValue[id], 18)) {
+    if (await withdrawToken(chainID, provider, poolConfig[id].address, withdrawValue[id], 18)) {
       updateFarmConfig();
     }
     setPending(false);
   };
 
-  const changeView = (event, newView) => {
-    setView(newView);
-  };
-
-  const [farmConfig, setFarmConfig] = useState([]);
+  const [poolConfig, setPoolConfig] = useState([]);
 
   useEffect(() => {
     if (hasCachedProvider()) {
@@ -109,9 +81,9 @@ export default function ExternalStakePool(param) {
     setStakeValue(oldStakeValue);
   };
 
-  const setStakeMax = async (id, token, idx) => {
-    const bal = await getTokenBalance(provider, farmConfig[idx].token, address);
-    changeStakeValue(id, bal);
+  const setStakeMax = async (token, idx) => {
+    const bal = await getTokenBalance(provider, poolConfig[idx].stakeToken, address);
+    changeStakeValue(idx, bal);
   };
 
   const changeWithdrawValue = (id, value) => {
@@ -122,19 +94,16 @@ export default function ExternalStakePool(param) {
 
   const approve = async idx => {
     setPending(true);
-    if (await tokenApprove(chainID, provider, farmConfig[idx].token)) {
+    if (await tokenApprove(chainID, provider, poolConfig[idx].stakeToken, poolConfig[idx].address)) {
       updateFarmConfig();
     }
     setPending(false);
   };
 
   const updateFarmConfig = () => {
-    getFarmsDetail(chainID, provider, address).then(re => {
-      setFarmConfig(re);
-      console.log("farms", re);
+    getPoolsDetail(chainID, provider, address).then(re => {
+      setPoolConfig(re);
     });
-    const updateInfo = param.updateInfo;
-    updateInfo();
   };
 
   const renderFarmRow = (el, idx) => {
@@ -146,12 +115,12 @@ export default function ExternalStakePool(param) {
               <Box minWidth={64} display="flex" justifyContent="center">
                 <img src={`tokens/${el.image}`} />
               </Box>
-              <Typography>{el.name}</Typography>
+              <Typography>{`${el.stake} for ${el.reward}`}</Typography>
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
           <TableCell align="left">{el.tvl}</TableCell>
-          <TableCell align="left">{el.depositFee / 100}%</TableCell>
+          <TableCell align="left">{el.remainedReward}</TableCell>
           <TableCell align="left">{el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance}</TableCell>
           <TableCell align="left">{el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward}</TableCell>
         </TableRow>
@@ -179,12 +148,12 @@ export default function ExternalStakePool(param) {
                   type="number"
                   placeholder="Enter an amount"
                   className="stake-input"
-                  value={stakeValue[el.id]}
-                  onChange={e => changeStakeValue(el.id, e.target.value)}
+                  value={stakeValue[idx]}
+                  onChange={e => changeStakeValue(idx, e.target.value)}
                   labelWidth={0}
                   endAdornment={
                     <InputAdornment position="end">
-                      <Button variant="text" onClick={() => setStakeMax(el.id, el.token, idx)} color="inherit">
+                      <Button variant="text" onClick={() => setStakeMax(el.stakeToken, idx)} color="inherit">
                         Max
                       </Button>
                     </InputAdornment>
@@ -194,7 +163,7 @@ export default function ExternalStakePool(param) {
                   disabled={pending}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => stakeHandler(el.id, el.decimals)}
+                  onClick={() => stakeHandler(idx, el.decimals)}
                   className="stake-lp-button"
                 >
                   <Typography variant="body1">Stake</Typography>
@@ -207,16 +176,12 @@ export default function ExternalStakePool(param) {
                   type="number"
                   placeholder="Enter an amount"
                   className="stake-input"
-                  value={withdrawValue[el.id]}
-                  onChange={e => changeWithdrawValue(el.id, e.target.value)}
+                  value={withdrawValue[idx]}
+                  onChange={e => changeWithdrawValue(idx, e.target.value)}
                   labelWidth={0}
                   endAdornment={
                     <InputAdornment position="end">
-                      <Button
-                        variant="text"
-                        onClick={() => changeWithdrawValue(el.id, el.stakedBalance)}
-                        color="inherit"
-                      >
+                      <Button variant="text" onClick={() => changeWithdrawValue(idx, el.stakedBalance)} color="inherit">
                         Max
                       </Button>
                     </InputAdornment>
@@ -226,7 +191,7 @@ export default function ExternalStakePool(param) {
                   disabled={pending}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => withdrawHandler(el.id)}
+                  onClick={() => withdrawHandler(idx)}
                   className="stake-lp-button"
                 >
                   <Typography variant="body1">Withdraw</Typography>
@@ -239,7 +204,7 @@ export default function ExternalStakePool(param) {
                   disabled={pending}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => claimHandler(el.id)}
+                  onClick={() => claimHandler(idx)}
                   className="stake-lp-button"
                 >
                   <Typography variant="body1">Claim</Typography>
@@ -254,22 +219,9 @@ export default function ExternalStakePool(param) {
 
   return (
     <Zoom in={true}>
-      <Paper className={`ohm-card secondary ${isSmallScreen && "mobile"}`}>
-        <div className="card-content">
-          <Tabs
-            key={String(zoomed)}
-            centered
-            value={view}
-            textColor="primary"
-            indicatorColor="primary"
-            className="stake-tab-buttons"
-            onChange={changeView}
-            aria-label="stake tabs"
-          >
-            <Tab label="Farms" {...a11yProps(0)} />
-            <Tab label="Pools" {...a11yProps(1)} />
-          </Tabs>
-          <TabPanel value={view} index={0} className="stake-tab-panel">
+      <Box display="flex" justifyContent="center">
+        <Paper className={`ohm-card divends-container secondary ${isSmallScreen && "mobile"}`}>
+          <div className="card-content">
             <TableContainer className="stake-table">
               <Table>
                 <TableHead>
@@ -277,44 +229,17 @@ export default function ExternalStakePool(param) {
                     <TableCell>Asset</TableCell>
                     <TableCell align="left">APY</TableCell>
                     <TableCell align="left">TVL</TableCell>
-                    <TableCell align="left">Deposit Fee</TableCell>
+                    <TableCell align="left">Remained</TableCell>
                     <TableCell align="left">Staked</TableCell>
                     <TableCell align="left">Reward</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {farmConfig
-                    // .filter(el => el.isLP)
-                    .map((el, idx) => el.isLP && renderFarmRow(el, idx))}
-                </TableBody>
+                <TableBody>{poolConfig.map((el, idx) => renderFarmRow(el, idx))}</TableBody>
               </Table>
             </TableContainer>
-          </TabPanel>
-          <TabPanel value={view} index={1} className="stake-tab-panel">
-            <TableContainer className="stake-table">
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Asset</TableCell>
-                    <TableCell align="left">APY</TableCell>
-                    <TableCell align="left">TVL</TableCell>
-                    <TableCell align="left">Deposit Fee</TableCell>
-                    <TableCell align="left">Staked</TableCell>
-                    <TableCell align="left">Reward</TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableHead>
-
-                <TableBody>
-                  {farmConfig
-                    // .filter(el => el.isLP)
-                    .map((el, idx) => !el.isLP && renderFarmRow(el, idx))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </TabPanel>
-        </div>
-      </Paper>
+          </div>
+        </Paper>
+      </Box>
     </Zoom>
   );
 }
