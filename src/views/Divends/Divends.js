@@ -119,10 +119,14 @@ export default function Divends() {
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{el.tvl}</TableCell>
-          <TableCell align="left">{el.remainedReward}</TableCell>
-          <TableCell align="left">{el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance}</TableCell>
-          <TableCell align="left">{el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward}</TableCell>
+          <TableCell align="left">{el.tvl.toFixed(2)}</TableCell>
+          <TableCell align="left">{el.remainedReward.toFixed(4)}</TableCell>
+          <TableCell align="left">
+            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance.toFixed(2)}
+          </TableCell>
+          <TableCell align="left">
+            {el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward.toFixed(4)}
+          </TableCell>
         </TableRow>
         {el.allowance === 0 ? (
           <TableRow>
@@ -219,7 +223,15 @@ export default function Divends() {
 
   return (
     <Zoom in={true}>
-      <Box display="flex" justifyContent="center">
+      <Box display="flex" justifyContent="center" flexDirection="column" alignItems="center">
+        <Paper className={`ohm-card divends-container secondary ${isSmallScreen && "mobile"}`}>
+          <Box display="flex" flexDirection="column" alignItems="center" gridGap="20px">
+            <img src="favicon.png" width={250} />
+            <Typography variant="h6" color="primary">
+              You can get rewards by staking tokens.
+            </Typography>
+          </Box>
+        </Paper>
         <Paper className={`ohm-card divends-container secondary ${isSmallScreen && "mobile"}`}>
           <div className="card-content">
             <TableContainer className="stake-table">

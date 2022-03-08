@@ -150,10 +150,14 @@ export default function ExternalStakePool(param) {
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{el.tvl}</TableCell>
+          <TableCell align="left">{el.tvl.toFixed(2)}</TableCell>
           <TableCell align="left">{el.depositFee / 100}%</TableCell>
-          <TableCell align="left">{el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance}</TableCell>
-          <TableCell align="left">{el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward}</TableCell>
+          <TableCell align="left">
+            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance.toFixed(2)}
+          </TableCell>
+          <TableCell align="left">
+            {el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward.toFixed(4)}
+          </TableCell>
         </TableRow>
         {el.allowance === 0 ? (
           <TableRow>
