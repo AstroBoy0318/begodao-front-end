@@ -21,7 +21,7 @@ import {
 import { Skeleton } from "@material-ui/lab";
 import { trim } from "../../helpers";
 import "./divends.scss";
-import { getTokenBalance } from "../../helpers/Farms";
+import { formatDecimal, getTokenBalance } from "../../helpers/Farms";
 
 export default function Divends() {
   const { provider, hasCachedProvider, address, connected, connect, chainID } = useWeb3Context();
@@ -47,9 +47,9 @@ export default function Divends() {
     setPending(false);
   };
 
-  const withdrawHandler = async id => {
+  const withdrawHandler = async (id, decimals) => {
     setPending(true);
-    if (await withdrawToken(chainID, provider, poolConfig[id].address, withdrawValue[id], 18)) {
+    if (await withdrawToken(chainID, provider, poolConfig[id].address, withdrawValue[id], decimals)) {
       updateFarmConfig();
     }
     setPending(false);
@@ -77,7 +77,7 @@ export default function Divends() {
 
   const changeStakeValue = (id, value) => {
     let oldStakeValue = JSON.parse(JSON.stringify(stakeValue));
-    oldStakeValue[id] = value;
+    oldStakeValue[id] = formatDecimal(value, 10);
     setStakeValue(oldStakeValue);
   };
 
@@ -195,7 +195,7 @@ export default function Divends() {
                   disabled={pending}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => withdrawHandler(idx)}
+                  onClick={() => withdrawHandler(idx, el.decimals)}
                   className="stake-lp-button"
                 >
                   <Typography variant="body1">Withdraw</Typography>

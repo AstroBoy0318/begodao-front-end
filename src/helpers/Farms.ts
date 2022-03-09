@@ -164,3 +164,15 @@ export async function withdrawToken(
     return false;
   }
 }
+
+export async function getXbegoTaxRate(networkID: NetworkID, provider: StaticJsonRpcProvider) {
+  const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, xBegoAbi, provider);
+  const taxRate = await xBegoContract.transferTaxRate();
+  return taxRate / 100;
+}
+
+export function formatDecimal(n: number, decimals: number) {
+  const y = Math.pow(10, decimals);
+  const x = Math.floor(n * y);
+  return x / y;
+}

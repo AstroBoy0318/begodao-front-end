@@ -12,6 +12,7 @@ import { useWeb3Context } from "../../hooks/web3Context";
 
 import PIPImg from "src/assets/tokens/token_PIP.svg";
 import SPIPImg from "src/assets/tokens/token_sPIP.svg";
+import xPIPImg from "src/assets/tokens/token_sPIP.svg";
 import token33tImg from "src/assets/tokens/token_33T.svg";
 
 const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
@@ -25,6 +26,9 @@ const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
     switch (tokenSymbol) {
       case "BEGO":
         tokenPath = PIPImg;
+        break;
+      case "xBEGO":
+        tokenPath = xPIPImg;
         break;
       case "33T":
         tokenPath = token33tImg;
@@ -62,7 +66,7 @@ function OhmMenu() {
 
   const SBEGO_ADDRESS = addresses[networkID].SBEGO_ADDRESS;
   const BEGO_ADDRESS = addresses[networkID].BEGO_ADDRESS;
-  const PT_TOKEN_ADDRESS = addresses[networkID].PT_TOKEN_ADDRESS;
+  const xBEGO_ADDRESS = addresses[networkID].XBEGO_ADDRESS;
 
   const handleClick = event => {
     setAnchorEl(anchorEl ? null : event.currentTarget);
@@ -115,6 +119,10 @@ function OhmMenu() {
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("sBEGO", SBEGO_ADDRESS)}>
                         <img src="sbego.png" width={25} alt="bego-icon" />
                         <Typography variant="body1">sBEGO</Typography>
+                      </Button>
+                      <Button variant="contained" color="secondary" onClick={addTokenToWallet("xBEGO", xBEGO_ADDRESS)}>
+                        <img src="sbego.png" width={25} alt="bego-icon" />
+                        <Typography variant="body1">xBEGO</Typography>
                       </Button>
                     </Box>
                   </Box>

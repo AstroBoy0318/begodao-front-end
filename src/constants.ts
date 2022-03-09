@@ -76,8 +76,8 @@ export const addresses: IAddresses = {
     PRESALE_ADDRESS: "0x37c2fef63F3cC53c103F52f6b970Ac241ae5F41c",
     WFTM_ADDRESS: "0x9c3c9283d3e44854697cd22d3faa240cfb032889",
     REDEEM_HELPER_ADDRESS: "0xAF46E1DC1Bc685fb0C40F415B6EBbd2123a4AD69",
-    MASTERCHEF_ADDRESS: "0x7BaC4a92a349C13Bd9021489D63f42373B8a067C",
-    XBEGO_ADDRESS: "0xe249B86BA7082d27e656169A58A368bAC0449355",
+    MASTERCHEF_ADDRESS: "0x8F137DF0d29e7108f2F9864e1D99bC907A8c1612",
+    XBEGO_ADDRESS: "0xa142e64deda1a75094006182f88A30b67B58b56f",
   },
 };
 
@@ -98,6 +98,18 @@ export const farms = {
       name: "DAI",
       image: "DAI.svg",
     },
+    {
+      id: 2,
+      isLP: false,
+      name: "BUSD",
+      image: "DAI.svg",
+    },
+    {
+      id: 3,
+      isLP: false,
+      name: "sBEGO",
+      image: "DAI.svg",
+    },
   ],
 };
 
@@ -107,14 +119,14 @@ export const pools = {
   250: [],
   80001: [
     {
-      address: "0x49B8f75255a2B08cd53E0936c29B995843449ecc",
+      address: "0x26b316e5D11C1cB8Ca759F20F6f4970FD5FC7Fc9",
       stake: "XBEGO",
       reward: "DAI",
       isLP: false,
       image: "BEGO-DAI.svg",
     },
     {
-      address: "0x5Cf77870c31517CE45d54dFeA16F8E0C2965cE24",
+      address: "0xA8f3Bd50E02Dc127bDDfcf9B23D561B26521ABA6",
       stake: "XBEGO",
       reward: "BEGO",
       isLP: false,

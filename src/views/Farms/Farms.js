@@ -5,9 +5,16 @@ import { useState, useEffect } from "react";
 import ExternalStakePool from "../Stake/ExternalStakePool";
 import "./farms.scss";
 import { useWeb3Context } from "../../hooks";
-import { getLockedXbego, getRewardPerSec, getXbegoMaxSupply, getXbegoTotalSupply } from "../../helpers/Farms";
+import {
+  getLockedXbego,
+  getRewardPerSec,
+  getXbegoMaxSupply,
+  getXbegoTaxRate,
+  getXbegoTotalSupply,
+} from "../../helpers/Farms";
 import { getTokenPrice } from "../../helpers/GetPrice";
 import { addresses } from "../../constants";
+import Link from "@material-ui/core/Link";
 
 function Farms() {
   const [marketCap, setMarketCap] = useState(0);
@@ -17,6 +24,7 @@ function Farms() {
   const [circSupply, setCircSupply] = useState(0);
   const [lockedBal, setLockedBal] = useState(0);
   const [rewardPerSec, setRewardPerSec] = useState(0);
+  const [taxRate, setTaxRate] = useState(0);
   const smallerScreen = useMediaQuery("(max-width: 650px)");
   const verySmallScreen = useMediaQuery("(max-width: 379px)");
   const { provider, hasCachedProvider, address, connected, connect, chainID } = useWeb3Context();
@@ -41,6 +49,9 @@ function Farms() {
     });
     getRewardPerSec(chainID, provider).then(re => {
       setRewardPerSec(re);
+    });
+    getXbegoTaxRate(chainID, provider).then(re => {
+      setTaxRate(re);
     });
   };
   return (
@@ -87,6 +98,18 @@ function Farms() {
                     {marketPrice ? formatCurrency(marketPrice, 2) : <Skeleton type="text" />}
                   </Typography>
                 </Box>
+                <Link href="http://docs.begodao.com/" target="_blank">
+                  <Box textAlign="center" marginTop="10px">
+                    <Typography variant="h7" className="orangeText">
+                      xBEGO tax
+                    </Typography>
+                  </Box>
+                  <Box textAlign="center">
+                    <Typography variant="h7" className="orangeText">
+                      {taxRate ? `${taxRate}%` : <Skeleton type="text" />}
+                    </Typography>
+                  </Box>
+                </Link>
                 <Box className="metric price" textAlign="center"></Box>
               </Box>
 

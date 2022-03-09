@@ -44,6 +44,7 @@ export async function getPoolsDetail(networkID: NetworkID, provider: StaticJsonR
         : 0;
       return {
         ...el,
+        decimals: stakeTokenDecimals,
         stakeToken: stakeToken,
         rewardToken: rewardToken,
         apy: apy,

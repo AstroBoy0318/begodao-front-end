@@ -29,7 +29,14 @@ import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { formatCurrency, trim } from "../../helpers";
 import TabPanel from "../../components/TabPanel";
-import { getFarmsDetail, getTokenBalance, stakeToken, tokenApprove, withdrawToken } from "../../helpers/Farms";
+import {
+  formatDecimal,
+  getFarmsDetail,
+  getTokenBalance,
+  stakeToken,
+  tokenApprove,
+  withdrawToken,
+} from "../../helpers/Farms";
 
 function a11yProps(index) {
   return {
@@ -55,7 +62,6 @@ export default function ExternalStakePool(param) {
   });
 
   const stakeHandler = async (id, decimals) => {
-    alert(decimals);
     setPending(true);
     if (await stakeToken(chainID, provider, id, stakeValue[id], decimals)) {
       updateFarmConfig();
@@ -71,9 +77,9 @@ export default function ExternalStakePool(param) {
     setPending(false);
   };
 
-  const withdrawHandler = async id => {
+  const withdrawHandler = async (id, decimals) => {
     setPending(true);
-    if (await withdrawToken(chainID, provider, id, withdrawValue[id], 18)) {
+    if (await withdrawToken(chainID, provider, id, withdrawValue[id], decimals)) {
       updateFarmConfig();
     }
     setPending(false);
@@ -105,7 +111,7 @@ export default function ExternalStakePool(param) {
 
   const changeStakeValue = (id, value) => {
     let oldStakeValue = JSON.parse(JSON.stringify(stakeValue));
-    oldStakeValue[id] = value;
+    oldStakeValue[id] = formatDecimal(value, 10);
     setStakeValue(oldStakeValue);
   };
 
@@ -230,7 +236,7 @@ export default function ExternalStakePool(param) {
                   disabled={pending}
                   variant="outlined"
                   color="secondary"
-                  onClick={() => withdrawHandler(el.id)}
+                  onClick={() => withdrawHandler(el.id, el.decimals)}
                   className="stake-lp-button"
                 >
                   <Typography variant="body1">Withdraw</Typography>
