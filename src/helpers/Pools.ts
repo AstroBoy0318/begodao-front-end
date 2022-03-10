@@ -28,7 +28,8 @@ export async function getPoolsDetail(networkID: NetworkID, provider: StaticJsonR
         ethers.utils.formatUnits(await stakeTokenContract.balanceOf(el.address), stakeTokenDecimals),
       );
       const totalValue = totalStaked > 0 ? totalStaked * stakeTokenPrice : 0;
-      const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
+      // const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
+      const apy = totalValue > 0 ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const userInfo = userAddress ? await poolContract.userInfo(userAddress) : null;
       const stakedBalance = userAddress ? Number(ethers.utils.formatUnits(userInfo.amount, stakeTokenDecimals)) : 0;
       const pendingReward = userAddress

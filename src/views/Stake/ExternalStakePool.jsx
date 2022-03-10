@@ -156,13 +156,16 @@ export default function ExternalStakePool(param) {
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{el.tvl.toFixed(2)}</TableCell>
+          <TableCell align="left">{`${el.isLP ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`}</TableCell>
           <TableCell align="left">{el.depositFee / 100}%</TableCell>
           <TableCell align="left">
-            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : el.stakedBalance.toFixed(2)}
+            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatDecimal(el.stakedBalance, el.isLP ? 14 : 10)}
           </TableCell>
           <TableCell align="left">
-            {el.pendingReward === 0 ? <Skeleton width="80px" /> : el.pendingReward.toFixed(4)}
+            {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatDecimal(el.pendingReward, 10)}
+          </TableCell>
+          <TableCell align="left">
+            {el.allocPoint === 0 ? <Skeleton width="80px" /> : `${el.allocPoint / 100}x`}
           </TableCell>
         </TableRow>
         {el.allowance === 0 ? (
@@ -207,7 +210,7 @@ export default function ExternalStakePool(param) {
                   onClick={() => stakeHandler(el.id, el.decimals)}
                   className="stake-lp-button"
                 >
-                  <Typography variant="body1">Stake</Typography>
+                  <Typography variant="body1">Deposit</Typography>
                 </Button>
               </Box>
             </TableCell>
@@ -243,7 +246,7 @@ export default function ExternalStakePool(param) {
                 </Button>
               </Box>
             </TableCell>
-            <TableCell colSpan={2}>
+            <TableCell colSpan={3}>
               <Box display="flex" justifyContent="center">
                 <Button
                   disabled={pending}
@@ -252,7 +255,7 @@ export default function ExternalStakePool(param) {
                   onClick={() => claimHandler(el.id)}
                   className="stake-lp-button"
                 >
-                  <Typography variant="body1">Claim</Typography>
+                  <Typography variant="body1">Claim Rewards</Typography>
                 </Button>
               </Box>
             </TableCell>
@@ -276,7 +279,7 @@ export default function ExternalStakePool(param) {
             onChange={changeView}
             aria-label="stake tabs"
           >
-            <Tab label="Farms" {...a11yProps(0)} />
+            <Tab label="LPs" {...a11yProps(0)} />
             <Tab label="Pools" {...a11yProps(1)} />
           </Tabs>
           <TabPanel value={view} index={0} className="stake-tab-panel">
@@ -289,7 +292,8 @@ export default function ExternalStakePool(param) {
                     <TableCell align="left">TVL</TableCell>
                     <TableCell align="left">Deposit Fee</TableCell>
                     <TableCell align="left">Staked</TableCell>
-                    <TableCell align="left">Reward</TableCell>
+                    <TableCell align="left">Rewards</TableCell>
+                    <TableCell align="left">Multipler</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -310,7 +314,8 @@ export default function ExternalStakePool(param) {
                     <TableCell align="left">TVL</TableCell>
                     <TableCell align="left">Deposit Fee</TableCell>
                     <TableCell align="left">Staked</TableCell>
-                    <TableCell align="left">Reward</TableCell>
+                    <TableCell align="left">Rewards</TableCell>
+                    <TableCell align="left">Multipler</TableCell>
                     <TableCell></TableCell>
                   </TableRow>
                 </TableHead>

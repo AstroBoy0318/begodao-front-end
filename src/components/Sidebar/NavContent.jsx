@@ -53,7 +53,7 @@ function NavContent() {
     if (currentPath.indexOf("farms") >= 0 && page === "farms") {
       return true;
     }
-    if (currentPath.indexOf("divends") >= 0 && page === "divends") {
+    if (currentPath.indexOf("dividends") >= 0 && page === "dividends") {
       return true;
     }
     return false;
@@ -158,15 +158,15 @@ function NavContent() {
               <Link
                 component={NavLink}
                 id="divends-nav"
-                to="/divends"
+                to="/dividends"
                 isActive={(match, location) => {
-                  return checkPage(match, location, "divends");
+                  return checkPage(match, location, "dividends");
                 }}
                 className={`button-dapp-menu ${isActive ? "active" : ""}`}
               >
                 <Typography variant="h6">
                   <SvgIcon color="primary" component={UsdcIcon} viewBox="0 0 2000 2000" />
-                  Divends
+                  Dividends
                 </Typography>
               </Link>
 

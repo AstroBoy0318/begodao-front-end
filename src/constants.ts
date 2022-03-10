@@ -48,6 +48,8 @@ export const addresses: IAddresses = {
     FACTORY_ADDRESS: "0x152ee697f2e276fa89e96742e9bb9ab1f2e61be3",
     PRESALE_ADDRESS: "0xB9c58543879e15eddDDAf90aE85601c03F940dAC",
     WFTM_ADDRESS: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
+    MASTERCHEF_ADDRESS: "0x961fE04C778e9EE8cC1eBeEFEFF59f5381592F73",
+    XBEGO_ADDRESS: "0x19C01c6f9aF2496F77c9680350e686264CeEb987",
   },
   4002: {
     DAI_ADDRESS: "0x3A5b6631aD2Bd2b82fd3C5c4007937F14fa809b9",
@@ -84,7 +86,32 @@ export const addresses: IAddresses = {
 export const farms = {
   1337: [],
   4002: [],
-  250: [],
+  250: [
+    {
+      id: 0,
+      isLP: false,
+      name: "xBego",
+      image: "DAI.svg",
+    },
+    {
+      id: 1,
+      isLP: true,
+      name: "BEGO-DAI",
+      image: "BEGO-DAI.svg",
+    },
+    {
+      id: 2,
+      isLP: false,
+      name: "DAI",
+      image: "BEGO-DAI.svg",
+    },
+    {
+      id: 3,
+      isLP: false,
+      name: "USDC",
+      image: "BEGO-DAI.svg",
+    },
+  ],
   80001: [
     {
       id: 0,

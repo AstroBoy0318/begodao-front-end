@@ -243,7 +243,7 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
 
           <div className="data-row">
             <Typography>Deposit Fee ( DAO )</Typography>
-            <Typography>2%</Typography>
+            <Typography>3%</Typography>
           </div>
 
           {recipientAddress !== address && (

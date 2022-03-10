@@ -246,7 +246,7 @@ function App() {
                 <Farms />
               </Route>
 
-              <Route path="/divends">
+              <Route path="/dividends">
                 <Divends />
               </Route>
 

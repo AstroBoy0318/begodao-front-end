@@ -12,7 +12,7 @@ import { useWeb3Context } from "../../hooks/web3Context";
 
 import PIPImg from "src/assets/tokens/token_PIP.svg";
 import SPIPImg from "src/assets/tokens/token_sPIP.svg";
-import xPIPImg from "src/assets/tokens/token_sPIP.svg";
+import xPIPImg from "src/assets/tokens/token_xBego.svg";
 import token33tImg from "src/assets/tokens/token_33T.svg";
 
 const addTokenToWallet = (tokenSymbol, tokenAddress) => async () => {
@@ -121,7 +121,7 @@ function OhmMenu() {
                         <Typography variant="body1">sBEGO</Typography>
                       </Button>
                       <Button variant="contained" color="secondary" onClick={addTokenToWallet("xBEGO", xBEGO_ADDRESS)}>
-                        <img src="sbego.png" width={25} alt="bego-icon" />
+                        <img src="xbego.png" width={25} alt="bego-icon" />
                         <Typography variant="body1">xBEGO</Typography>
                       </Button>
                     </Box>

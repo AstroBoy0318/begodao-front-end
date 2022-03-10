@@ -81,7 +81,7 @@ function Farms() {
                   </Typography>
                   <Typography variant="h5">
                     {totalSupply ? (
-                      `${Math.floor(totalSupply - lockedBal)}/${Math.floor(totalSupply)}`
+                      `${Math.floor(totalSupply - lockedBal)} / ${Math.floor(totalSupply)}`
                     ) : (
                       <Skeleton type="text" />
                     )}
@@ -100,12 +100,12 @@ function Farms() {
                 </Box>
                 <Link href="http://docs.begodao.com/" target="_blank">
                   <Box textAlign="center" marginTop="10px">
-                    <Typography variant="h7" className="orangeText">
-                      xBEGO tax
+                    <Typography variant="h6" className="orangeText">
+                      xBEGO Tax
                     </Typography>
                   </Box>
                   <Box textAlign="center">
-                    <Typography variant="h7" className="orangeText">
+                    <Typography variant="h6" className="orangeText">
                       {taxRate ? `${taxRate}%` : <Skeleton type="text" />}
                     </Typography>
                   </Box>
@@ -127,6 +127,11 @@ function Farms() {
                   <Typography variant="h5">{rewardPerSec ? rewardPerSec : <Skeleton type="text" />}</Typography>
                 </Box>
               </Box>
+            </Box>
+            <Box marginTop="20px" display="flex" flexDirection="column" alignItems="center">
+              <Typography variant="h5" className="orangeText">
+                The Farm Start on Friday 11, 17:00 PM UTC
+              </Typography>
             </Box>
           </Paper>
           <div>

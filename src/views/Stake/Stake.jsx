@@ -400,7 +400,7 @@ function Stake() {
                               onChangeStake("unstake");
                             }}
                           >
-                            {txnButtonText(pendingTransactions, "unstaking", "Unstake BEGO")}
+                            {txnButtonText(pendingTransactions, "unstaking", "Unstake sBEGO")}
                           </Button>
                         ) : (
                           <Button

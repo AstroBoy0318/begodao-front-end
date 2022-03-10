@@ -36,7 +36,8 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
         : await getTokenPrice(networkID, provider, token);
       const totalValue = totalStaked > 0 ? totalStaked * depositTokenPrice : 0;
       const rewardPerYear = (xBegoPerYear * allocPoint) / totalAllocPoint;
-      const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
+      // const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
+      const apy = totalValue > 0 ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const userInfo = userAddress ? await masterchefContract.userInfo(el.id, userAddress) : null;
       const stakedBalance = userAddress ? Number(ethers.utils.formatUnits(userInfo.amount, tokenDecimals)) : 0;
       const pendingReward = userAddress
@@ -57,7 +58,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
         allocPoint: allocPoint,
         depositFee: depositFee,
         apy: apy,
-        tvl: totalStaked,
+        tvl: el.isLP ? totalValue : totalStaked,
         stakedBalance: stakedBalance,
         pendingReward: pendingReward,
         allowance: allowance,
