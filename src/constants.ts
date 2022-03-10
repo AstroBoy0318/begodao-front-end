@@ -137,6 +137,12 @@ export const farms = {
       name: "sBEGO",
       image: "DAI.svg",
     },
+    {
+      id: 4,
+      isLP: false,
+      name: "xBEGO",
+      image: "DAI.svg",
+    },
   ],
 };
 

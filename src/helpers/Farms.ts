@@ -58,6 +58,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
         allocPoint: allocPoint,
         depositFee: depositFee,
         apy: apy,
+        canCompound: token.toLowerCase() === addresses[networkID].XBEGO_ADDRESS.toLowerCase(),
         tvl: el.isLP ? totalValue : totalStaked,
         stakedBalance: stakedBalance,
         pendingReward: pendingReward,
@@ -176,4 +177,20 @@ export function formatDecimal(n: number, decimals: number) {
   const y = Math.pow(10, decimals);
   const x = Math.floor(n * y);
   return x / y;
+}
+
+export async function compound(networkID: NetworkID, provider: StaticJsonRpcProvider, id: number, userAddress: string) {
+  try {
+    const masterchefContract = new ethers.Contract(
+      addresses[networkID].MASTERCHEF_ADDRESS as string,
+      masterchefAbi,
+      provider.getSigner(),
+    );
+    const pendingReward = await masterchefContract.pendingxbego(id, userAddress);
+    const tx = await masterchefContract.deposit(id, pendingReward);
+    await tx.wait();
+    return true;
+  } catch (ex) {
+    return false;
+  }
 }

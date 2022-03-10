@@ -30,6 +30,7 @@ import { useWeb3Context } from "src/hooks/web3Context";
 import { formatCurrency, trim } from "../../helpers";
 import TabPanel from "../../components/TabPanel";
 import {
+  compound,
   formatDecimal,
   getFarmsDetail,
   getTokenBalance,
@@ -129,6 +130,14 @@ export default function ExternalStakePool(param) {
   const approve = async idx => {
     setPending(true);
     if (await tokenApprove(chainID, provider, farmConfig[idx].token)) {
+      updateFarmConfig();
+    }
+    setPending(false);
+  };
+
+  const compoundHandler = async id => {
+    setPending(true);
+    if (await compound(chainID, provider, id, address)) {
       updateFarmConfig();
     }
     setPending(false);
@@ -247,7 +256,7 @@ export default function ExternalStakePool(param) {
               </Box>
             </TableCell>
             <TableCell colSpan={3}>
-              <Box display="flex" justifyContent="center">
+              <Box display="flex" justifyContent="center" flexWrap="wrap" gridGap="10px">
                 <Button
                   disabled={pending}
                   variant="outlined"
@@ -257,6 +266,17 @@ export default function ExternalStakePool(param) {
                 >
                   <Typography variant="body1">Claim Rewards</Typography>
                 </Button>
+                {el.canCompound && (
+                  <Button
+                    disabled={pending}
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => compoundHandler(el.id)}
+                    className="stake-lp-button"
+                  >
+                    <Typography variant="body1">Compound</Typography>
+                  </Button>
+                )}
               </Box>
             </TableCell>
           </TableRow>
