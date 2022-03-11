@@ -31,7 +31,7 @@ export async function getPoolsDetail(networkID: NetworkID, provider: StaticJsonR
       // const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const apy = totalValue > 0 ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const userInfo = userAddress ? await poolContract.userInfo(userAddress) : null;
-      const stakedBalance = userAddress ? Number(ethers.utils.formatUnits(userInfo.amount, stakeTokenDecimals)) : 0;
+      const stakedBalance = userAddress ? ethers.utils.formatUnits(userInfo.amount, stakeTokenDecimals) : 0;
       const pendingReward = userAddress
         ? Number(ethers.utils.formatUnits(await poolContract.pendingReward(userAddress), rewardTokenDecimals))
         : 0;
@@ -80,12 +80,12 @@ export async function stakeToken(
   networkID: NetworkID,
   provider: StaticJsonRpcProvider,
   address: string,
-  amount: number,
+  amount: string,
   decimals: number,
 ) {
   try {
     const poolContract = new ethers.Contract(address, poolAbi, provider.getSigner());
-    const tx = await poolContract.deposit(ethers.utils.parseUnits(amount.toString(), decimals));
+    const tx = await poolContract.deposit(ethers.utils.parseUnits(amount, decimals));
     await tx.wait();
     return true;
   } catch (ex) {
@@ -97,12 +97,12 @@ export async function withdrawToken(
   networkID: NetworkID,
   provider: StaticJsonRpcProvider,
   address: string,
-  amount: number,
+  amount: string,
   decimals: number,
 ) {
   try {
     const poolContract = new ethers.Contract(address, poolAbi, provider.getSigner());
-    const tx = await poolContract.withdraw(ethers.utils.parseUnits(amount.toString(), decimals));
+    const tx = await poolContract.withdraw(ethers.utils.parseUnits(amount, decimals));
     await tx.wait();
     return true;
   } catch (ex) {

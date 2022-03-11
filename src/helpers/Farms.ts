@@ -39,7 +39,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
       // const apy = totalValue > 0 && isStarted ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const apy = totalValue > 0 ? (rewardPerYear / (totalValue / 3)) * 100 : 0;
       const userInfo = userAddress ? await masterchefContract.userInfo(el.id, userAddress) : null;
-      const stakedBalance = userAddress ? Number(ethers.utils.formatUnits(userInfo.amount, tokenDecimals)) : 0;
+      const stakedBalance = userAddress ? ethers.utils.formatUnits(userInfo.amount, tokenDecimals) : 0;
       const pendingReward = userAddress
         ? Number(ethers.utils.formatUnits(await masterchefContract.pendingxbego(el.id, userAddress)))
         : 0;
@@ -59,7 +59,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
         depositFee: depositFee,
         apy: apy,
         canCompound: token.toLowerCase() === addresses[networkID].XBEGO_ADDRESS.toLowerCase(),
-        tvl: el.isLP ? totalValue : totalStaked,
+        tvl: el.toShowUsd ? totalValue : totalStaked,
         stakedBalance: stakedBalance,
         pendingReward: pendingReward,
         allowance: allowance,
@@ -107,7 +107,7 @@ export async function getRewardPerSec(networkID: NetworkID, provider: StaticJson
 export async function getTokenBalance(provider: StaticJsonRpcProvider, tokenAddress: string, account: string) {
   const tokenContract = new ethers.Contract(tokenAddress, erc20, provider);
   const decimals = Number(await tokenContract.decimals());
-  const balance = Number(ethers.utils.formatUnits(await tokenContract.balanceOf(account), decimals));
+  const balance = ethers.utils.formatUnits(await tokenContract.balanceOf(account), decimals);
   return balance;
 }
 
@@ -129,7 +129,7 @@ export async function stakeToken(
   networkID: NetworkID,
   provider: StaticJsonRpcProvider,
   id: number,
-  amount: number,
+  amount: string,
   decimals: number,
 ) {
   try {
@@ -138,7 +138,7 @@ export async function stakeToken(
       masterchefAbi,
       provider.getSigner(),
     );
-    const tx = await masterchefContract.deposit(id, ethers.utils.parseUnits(amount.toString(), decimals));
+    const tx = await masterchefContract.deposit(id, ethers.utils.parseUnits(amount, decimals));
     await tx.wait();
     return true;
   } catch (ex) {
@@ -150,7 +150,7 @@ export async function withdrawToken(
   networkID: NetworkID,
   provider: StaticJsonRpcProvider,
   id: number,
-  amount: number,
+  amount: string,
   decimals: number,
 ) {
   try {
@@ -159,7 +159,7 @@ export async function withdrawToken(
       masterchefAbi,
       provider.getSigner(),
     );
-    const tx = await masterchefContract.withdraw(id, ethers.utils.parseUnits(amount.toString(), decimals));
+    const tx = await masterchefContract.withdraw(id, ethers.utils.parseUnits(amount, decimals));
     await tx.wait();
     return true;
   } catch (ex) {

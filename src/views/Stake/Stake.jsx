@@ -18,7 +18,15 @@ import {
 import NewReleases from "@material-ui/icons/NewReleases";
 import RebaseTimer from "../../components/RebaseTimer/RebaseTimer";
 import TabPanel from "../../components/TabPanel";
-import { getOhmTokenImage, getTokenImage, getWarmupDate, trim, getWarmupDeposit, getWarmupRebase } from "../../helpers";
+import {
+  getOhmTokenImage,
+  getTokenImage,
+  getWarmupDate,
+  trim,
+  getWarmupDeposit,
+  getWarmupRebase,
+  formatWithString,
+} from "../../helpers";
 import { changeApproval, changeStake } from "../../slices/StakeThunk";
 import "./stake.scss";
 import { useWeb3Context } from "src/hooks/web3Context";
@@ -175,13 +183,6 @@ function Stake() {
       .reduce((a, b) => a + b, 0)
       .toFixed(4),
   );
-  const formatWithString = num => {
-    let re = "";
-    if (num > 1000000000000000) return "∞";
-    if (num > 1000000000000) return `${(num / 1000000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}T`;
-    if (num > 1000000000) return `${(num / 1000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}B`;
-    if (num > 1000000) return `${(num / 1000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}M`;
-  };
   const trimmedStakingAPY =
     stakingAPY > 1000000
       ? formatWithString(stakingAPY)

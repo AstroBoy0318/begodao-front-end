@@ -27,7 +27,7 @@ import { ReactComponent as OhmLusdImg } from "src/assets/tokens/BEGO-DAI.svg";
 import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
 import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 import { useWeb3Context } from "src/hooks/web3Context";
-import { formatCurrency, trim } from "../../helpers";
+import { formatCurrency, formatWithString, trim } from "../../helpers";
 import TabPanel from "../../components/TabPanel";
 import {
   compound,
@@ -112,13 +112,14 @@ export default function ExternalStakePool(param) {
 
   const changeStakeValue = (id, value) => {
     let oldStakeValue = JSON.parse(JSON.stringify(stakeValue));
-    oldStakeValue[id] = formatDecimal(value, 10);
+    // oldStakeValue[id] = formatDecimal(value, 10);
+    oldStakeValue[id] = value;
     setStakeValue(oldStakeValue);
   };
 
   const setStakeMax = async (id, token, idx) => {
     const bal = await getTokenBalance(provider, farmConfig[idx].token, address);
-    changeStakeValue(id, bal);
+    changeStakeValue(id, bal.toString());
   };
 
   const changeWithdrawValue = (id, value) => {
@@ -164,11 +165,19 @@ export default function ExternalStakePool(param) {
               <Typography>{el.name}</Typography>
             </Box>
           </TableCell>
-          <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{`${el.isLP ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`}</TableCell>
+          <TableCell align="left">
+            {el.apy === 0 ? <Skeleton width="80px" /> : formatWithString(el.apy) + "%"}
+          </TableCell>
+          <TableCell align="left">
+            {`${el.toShowUsd ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`}
+          </TableCell>
           <TableCell align="left">{el.depositFee / 100}%</TableCell>
           <TableCell align="left">
-            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatDecimal(el.stakedBalance, el.isLP ? 14 : 10)}
+            {el.stakedBalance === 0 ? (
+              <Skeleton width="80px" />
+            ) : (
+              formatDecimal(Number(el.stakedBalance), el.isLP ? 14 : 10)
+            )}
           </TableCell>
           <TableCell align="left">
             {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatDecimal(el.pendingReward, 10)}
