@@ -175,8 +175,10 @@ export default function ExternalStakePool(param) {
           <TableCell align="left">
             {el.stakedBalance === 0 ? (
               <Skeleton width="80px" />
+            ) : Number(el.stakedBalance) > 0.000001 ? (
+              formatDecimal(Number(el.stakedBalance), 10)
             ) : (
-              formatDecimal(Number(el.stakedBalance), el.isLP ? 14 : 10)
+              el.stakedBalance
             )}
           </TableCell>
           <TableCell align="left">

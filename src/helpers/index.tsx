@@ -287,7 +287,6 @@ export const subtractDates = (dateA: Date, dateB: Date) => {
 };
 
 export const formatWithString = (num: number) => {
-  let re = "";
   if (num > 1000000000000000) return "∞";
   if (num > 1000000000000) return `${(num / 1000000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}T`;
   if (num > 1000000000) return `${(num / 1000000000).toLocaleString(undefined, { maximumFractionDigits: 3 })}B`;

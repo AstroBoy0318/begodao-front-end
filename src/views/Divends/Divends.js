@@ -123,7 +123,13 @@ export default function Divends() {
           <TableCell align="left">{formatDecimal(el.tvl, 10)}</TableCell>
           <TableCell align="left">{formatDecimal(el.remainedReward, 5)}</TableCell>
           <TableCell align="left">
-            {el.stakedBalance === 0 ? <Skeleton width="80px" /> : formatDecimal(Number(el.stakedBalance), 10)}
+            {el.stakedBalance === 0 ? (
+              <Skeleton width="80px" />
+            ) : Number(el.stakedBalance) > 0.000001 ? (
+              formatDecimal(Number(el.stakedBalance), 10)
+            ) : (
+              el.stakedBalance
+            )}
           </TableCell>
           <TableCell align="left">
             {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatDecimal(el.pendingReward, 10)}

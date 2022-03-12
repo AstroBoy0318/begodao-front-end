@@ -31,7 +31,7 @@ export async function getTokenPrice(networkID: NetworkID, provider: StaticJsonRp
     const tokenBal = await tokenContract.balanceOf(pair);
     const wftmBalance = Number(ethers.utils.formatEther(wftmBal.toString()));
     const tokenBalance = Number(ethers.utils.formatUnits(tokenBal.toString(), tokenDecimals));
-    return (tokenBalance / wftmBalance) * ftmPrice;
+    return (wftmBalance / tokenBalance) * ftmPrice;
   } else {
     const pair1 = await factoryContract.getPair(tokenAddress, addresses[networkID].DAI_ADDRESS);
     const daimBal = await daiContract.balanceOf(pair1);
