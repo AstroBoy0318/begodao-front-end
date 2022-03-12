@@ -182,7 +182,13 @@ export default function ExternalStakePool(param) {
             )}
           </TableCell>
           <TableCell align="left">
-            {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatDecimal(el.pendingReward, 10)}
+            {el.pendingReward === 0 ? (
+              <Skeleton width="80px" />
+            ) : Number(el.pendingReward) > 0.000001 ? (
+              formatDecimal(Number(el.pendingReward), 10)
+            ) : (
+              el.pendingReward
+            )}
           </TableCell>
           <TableCell align="left">
             {el.allocPoint === 0 ? <Skeleton width="80px" /> : `${el.allocPoint / 100}x`}

@@ -19,7 +19,7 @@ import {
   Zoom,
 } from "@material-ui/core";
 import { Skeleton } from "@material-ui/lab";
-import { trim } from "../../helpers";
+import { formatCurrency, trim } from "../../helpers";
 import "./divends.scss";
 import { formatDecimal, getTokenBalance } from "../../helpers/Farms";
 
@@ -120,7 +120,9 @@ export default function Divends() {
             </Box>
           </TableCell>
           <TableCell align="left">{el.apy === 0 ? <Skeleton width="80px" /> : trim(el.apy, 1) + "%"}</TableCell>
-          <TableCell align="left">{formatDecimal(el.tvl, 10)}</TableCell>
+          <TableCell align="left">
+            {`${el.toShowUsd ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`}
+          </TableCell>
           <TableCell align="left">{formatDecimal(el.remainedReward, 5)}</TableCell>
           <TableCell align="left">
             {el.stakedBalance === 0 ? (
@@ -132,7 +134,13 @@ export default function Divends() {
             )}
           </TableCell>
           <TableCell align="left">
-            {el.pendingReward === 0 ? <Skeleton width="80px" /> : formatDecimal(el.pendingReward, 10)}
+            {el.pendingReward === 0 ? (
+              <Skeleton width="80px" />
+            ) : Number(el.pendingReward) > 0.000001 ? (
+              formatDecimal(Number(el.pendingReward), 10)
+            ) : (
+              el.pendingReward
+            )}
           </TableCell>
         </TableRow>
         {el.allowance === 0 ? (
