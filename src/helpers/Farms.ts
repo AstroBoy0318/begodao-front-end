@@ -16,7 +16,7 @@ export async function getFarmsDetail(networkID: NetworkID, provider: StaticJsonR
   const xBegoContract = new ethers.Contract(addresses[networkID].XBEGO_ADDRESS as string, erc20, provider);
   const xBegoDecimals = Number(await xBegoContract.decimals());
   const xBegoPrice = await getTokenPrice(networkID, provider, addresses[networkID].XBEGO_ADDRESS);
-  const isStarted = Number(await masterchefContract.startTime()) < new Date().getTime() / 1000;
+  // const isStarted = Number(await masterchefContract.startTime()) < new Date().getTime() / 1000;
   const xBegoPerSec = Number(ethers.utils.formatUnits(await masterchefContract.xbegoPerSec(), xBegoDecimals));
   const xBegoPerYear = xBegoPerSec * SECONDS_PER_YEAR * xBegoPrice;
   const totalAllocPoint = Number(await masterchefContract.totalAllocPoint());

@@ -1,4 +1,3 @@
-import { useDispatch, useSelector } from "react-redux";
 import { useWeb3Context } from "../../hooks";
 import { useEffect, useState } from "react";
 import useMediaQuery from "@material-ui/core/useMediaQuery";

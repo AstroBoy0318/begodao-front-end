@@ -22,10 +22,6 @@ import {
 import { Skeleton } from "@material-ui/lab";
 
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import BondLogo from "../../components/BondLogo";
-import { ReactComponent as OhmLusdImg } from "src/assets/tokens/BEGO-DAI.svg";
-import { ReactComponent as DaiImg } from "src/assets/tokens/DAI.svg";
-import { ReactComponent as ArrowUp } from "../../assets/icons/arrow-up.svg";
 import { useWeb3Context } from "src/hooks/web3Context";
 import { formatCurrency, formatWithString, trim } from "../../helpers";
 import TabPanel from "../../components/TabPanel";
@@ -38,6 +34,7 @@ import {
   tokenApprove,
   withdrawToken,
 } from "../../helpers/Farms";
+import { farms } from "../../constants";
 
 function a11yProps(index) {
   return {
@@ -90,7 +87,7 @@ export default function ExternalStakePool(param) {
     setView(newView);
   };
 
-  const [farmConfig, setFarmConfig] = useState([]);
+  const [farmConfig, setFarmConfig] = useState(farms[chainID]);
 
   useEffect(() => {
     if (hasCachedProvider()) {
@@ -165,13 +162,17 @@ export default function ExternalStakePool(param) {
               <Typography>{el.name}</Typography>
             </Box>
           </TableCell>
+          <TableCell align="left">{!el.apy ? <Skeleton width="80px" /> : formatWithString(el.apy) + "%"}</TableCell>
           <TableCell align="left">
-            {el.apy === 0 ? <Skeleton width="80px" /> : formatWithString(el.apy) + "%"}
+            {!el.tvl ? (
+              <Skeleton width="80px" />
+            ) : (
+              `${el.toShowUsd ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`
+            )}
           </TableCell>
           <TableCell align="left">
-            {`${el.toShowUsd ? formatCurrency(el.tvl, 3) : formatDecimal(el.tvl, 10)}`}
+            {el.depositFee === undefined ? <Skeleton width="80px" /> : `${el.depositFee / 100}%`}
           </TableCell>
-          <TableCell align="left">{el.depositFee / 100}%</TableCell>
           <TableCell align="left">
             {el.stakedBalance === 0 ? (
               <Skeleton width="80px" />
@@ -190,16 +191,14 @@ export default function ExternalStakePool(param) {
               el.pendingReward
             )}
           </TableCell>
-          <TableCell align="left">
-            {el.allocPoint === 0 ? <Skeleton width="80px" /> : `${el.allocPoint / 100}x`}
-          </TableCell>
+          <TableCell align="left">{!el.allocPoint ? <Skeleton width="80px" /> : `${el.allocPoint / 100}x`}</TableCell>
         </TableRow>
-        {el.allowance === 0 ? (
+        {!el.allowance ? (
           <TableRow>
-            <TableCell colSpan={6}>
+            <TableCell colSpan={7}>
               <Box display="flex" justifyContent="center">
                 <Button
-                  disabled={pending}
+                  disabled={pending || el.allowance === undefined}
                   variant="outlined"
                   color="secondary"
                   onClick={() => approve(idx)}

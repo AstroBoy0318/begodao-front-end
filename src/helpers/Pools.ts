@@ -17,7 +17,7 @@ export async function getPoolsDetail(networkID: NetworkID, provider: StaticJsonR
       const stakeTokenPrice = el.isLP
         ? await getLPTokenPrice(networkID, provider, stakeToken)
         : await getTokenPrice(networkID, provider, stakeToken);
-      const isStarted = Number(await poolContract.startTime()) < new Date().getTime() / 1000;
+      // const isStarted = Number(await poolContract.startTime()) < new Date().getTime() / 1000;
       const rewardToken = await poolContract.rewardToken();
       const rewardTokenContract = new ethers.Contract(rewardToken, erc20, provider);
       const rewardTokenDecimals = Number(await rewardTokenContract.decimals());
@@ -49,7 +49,7 @@ export async function getPoolsDetail(networkID: NetworkID, provider: StaticJsonR
         stakeToken: stakeToken,
         rewardToken: rewardToken,
         apy: apy,
-        tvl: totalStaked,
+        tvl: el.toShowUsd ? totalValue : totalStaked,
         stakedBalance: stakedBalance,
         pendingReward: pendingReward,
         allowance: allowance,

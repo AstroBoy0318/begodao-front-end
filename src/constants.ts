@@ -228,7 +228,24 @@ export const farms = {
 export const pools = {
   1337: [],
   4002: [],
-  250: [],
+  250: [
+    {
+      address: "0x5fD9d44d69c49F94095F12A147Bd502d545e3fae",
+      stake: "xBEGO",
+      toShowUsd: true,
+      reward: "DAI",
+      isLP: false,
+      image: "DAI.svg",
+    },
+    {
+      address: "0xc51b593F25F201124F8Ba4a13C4F1dD41ab8E551",
+      stake: "xBEGO",
+      toShowUsd: true,
+      reward: "BEGO",
+      isLP: false,
+      image: "BEGO.svg",
+    },
+  ],
   80001: [
     {
       address: "0x26b316e5D11C1cB8Ca759F20F6f4970FD5FC7Fc9",
